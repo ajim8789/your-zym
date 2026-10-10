@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Arnold's Gym — Member Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    body { min-height: 100svh; display: grid; place-items: center; padding: 32px 18px;
+      background:
+        radial-gradient(600px 340px at 12% 8%, rgba(255,49,49,.15), transparent 60%),
+        radial-gradient(600px 380px at 88% 92%, rgba(255,122,0,.13), transparent 60%),
+        var(--bg); }
+    .reg-card {
+      width: min(560px, 100%);
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px;
+      padding: 44px 38px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow); animation: pop .5s ease;
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(24px); } }
+    .reg-card h2 { text-transform: uppercase; text-align: center; margin-bottom: 6px; }
+    .reg-card h2 .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .reg-card .sub { text-align: center; color: var(--muted); font-size: .88rem; margin-bottom: 28px; }
+    .pw-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 520px) { .pw-row { grid-template-columns: 1fr; } }
+    /* success overlay */
+    .success-view { display: none; text-align: center; padding: 30px 0; }
+    .success-view.show { display: block; animation: pop .5s ease; }
+    .check-ring {
+      width: 96px; height: 96px; border-radius: 50%; margin: 0 auto 22px;
+      display: grid; place-items: center; font-size: 2.6rem; color: #fff;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 0 0 12px rgba(34,197,94,.15), 0 14px 34px rgba(34,197,94,.4);
+      animation: ring .7s ease;
+    }
+    @keyframes ring { 0% { transform: scale(.4); opacity: 0; } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+    .form-view.hidden { display: none; }
+    @media (max-width: 480px) {
+      body { padding: 20px 12px; }
+      .reg-card { padding: 32px 20px; }
+      .check-ring { width: 78px; height: 78px; font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reg-card">
+    <!-- form view -->
+    <div class="form-view" id="formView">
+      <h2>Join <span class="accent">Arnold's Gym</span></h2>
+      <p class="sub">Fill the form — our team will call you to confirm your batch.</p>
+      <form id="regForm">
+        <div class="form-grid">
+          <div class="field full"><label for="rName">Full Name</label><input id="rName" name="name" type="text" placeholder="e.g. Rahul Kumar" required /></div>
+          <div class="field"><label for="rEmail">Email</label><input id="rEmail" name="email" type="email" placeholder="you@email.com" required /></div>
+          <div class="field"><label for="rMobile">Mobile</label><input id="rMobile" name="mobile" type="tel" pattern="[0-9]{10}" placeholder="10-digit mobile" required /></div>
+          <div class="field"><label for="rGender">Gender</label>
+            <select id="rGender" name="gender" required>
+              <option value="" disabled selected>Select gender</option>
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label for="rPlan">Membership Plan</label>
+            <select id="rPlan" name="plan" required>
+              <option value="" disabled selected>Select plan</option>
+              <option>Monthly — ₹800</option>
+              <option>Quarterly — ₹2,000</option>
+              <option>Yearly — ₹7,000</option>
+            </select>
+          </div>
+          <div class="field full pw-row" style="grid-column:1/-1">
+            <div class="field"><label for="rPass">Password</label><input id="rPass" name="password" type="password" minlength="4" placeholder="Min 4 characters" required /></div>
+            <div class="field"><label for="rPass2">Confirm Password</label><input id="rPass2" type="password" placeholder="Repeat password" required /></div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad" id="regBtn" style="width:100%;justify-content:center"><i class="fas fa-user-plus"></i> Register Me</button>
+        </div>
+        <p class="form-note" style="text-align:center"><i class="fas fa-lock"></i> Your details are stored securely in our records.</p>
+      </form>
+      <div style="text-align:center;margin-top:18px"><a href="index.html" style="color:var(--muted);font-size:.88rem"><i class="fas fa-arrow-left"></i> Back to home</a></div>
+    </div>
+
+    <!-- success view -->
+    <div class="success-view" id="successView">
+      <div class="check-ring"><i class="fas fa-check"></i></div>
+      <h2>Welcome To The <span class="accent">Family</span></h2>
+      <p class="sub" id="successMsg">Registration successful! We will call you shortly.</p>
+      <a href="index.html" class="btn btn-grad"><i class="fas fa-home"></i> Back To Home</a>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/sheets.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // gym name branding (Settings → Gym Name in admin panel)
+      api.getSiteContent().then((c) => { if (c) applyGymName(gymNameOf(c)); }).catch(() => {});
+      // pre-select plan from ?plan=Monthly link on pricing cards
+      const q = new URLSearchParams(location.search).get("plan");
+      if (q) {
+        const sel = document.getElementById("rPlan");
+        [...sel.options].forEach((o) => { if (o.text.startsWith(q)) sel.value = o.value; });
+      }
+
+      const form = document.getElementById("regForm");
+      const btn = document.getElementById("regBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const p1 = document.getElementById("rPass").value;
+        const p2 = document.getElementById("rPass2").value;
+        if (p1 !== p2) { toast("Passwords do not match.", "error"); return; }
+
+        const payload = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          mobile: form.mobile.value.trim(),
+          gender: form.gender.value,
+          plan: form.plan.value,
+          password: p1, // stored as-is in the sheet (owner-managed)
+        };
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
+        try {
+          const r = await api.register(payload);
+          if (r && r.ok) {
+            document.getElementById("formView").classList.add("hidden");
+            document.getElementById("successView").classList.add("show");
+            document.getElementById("successMsg").textContent =
+              `Thanks ${payload.name}! Your ${payload.plan.split(" — ")[0]} request is saved. We will call you shortly.`;
+          } else throw new Error((r && r.error) || "failed");
+        } catch (err) {
+          toast("Could not save right now. Please try again.", "error");
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-user-plus"></i> Register Me';
+        }
+      });
+    });
+
+    function toast(msg, type = "ok") {
+      let t = document.querySelector(".toast");
+      if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
+      t.className = "toast " + type;
+      t.innerHTML = `<i class="fas ${type === "ok" ? "fa-check-circle" : "fa-exclamation-circle"}"></i>${msg}`;
+      requestAnimationFrame(() => t.classList.add("show"));
+      clearTimeout(t._h);
+      t._h = setTimeout(() => t.classList.remove("show"), 4200);
+    }
+  </script>
+</body>
+</html>

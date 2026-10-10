@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arnold's Gym — Train Hard, Stay Humble | Giridih, Jharkhand</title>
+  <meta name="description" content="Arnold's Gym, Bhandaridih, Giridih — strength training, fat loss, personal coaching. Join the family." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="assets/style.css" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8604289893167584"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- announcement bar (managed from Admin → Website Content) -->
+  <div class="announce-bar" id="announceBar" hidden>
+    <i class="fas fa-bullhorn"></i><span id="announceText"></span>
+  </div>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#home" class="logo">Arnold's <span class="accent">Gym</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home" class="active">Home</a></li>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#classes">Classes</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#trainers">Trainers</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="login.html" class="btn btn-ghost btn-sm nav-cta"><i class="fas fa-user-shield"></i> Admin</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <header class="hero" id="home">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="container hero-grid">
+      <span class="hero-kicker">Giridih's Hardcore Training Zone</span>
+      <h1><span id="heroLine1">Win That Battle</span><br /><span id="heroLine2">In Your Mind</span> <span class="typed-wrap"><span id="typed"></span></span></h1>
+      <p class="lead">No shortcuts. Just iron, sweat and discipline. Join Arnold's Gym and transform your body with certified trainers, modern equipment and plans that fit every pocket.</p>
+      <div class="hero-cta">
+        <a href="Registration.html" class="btn btn-grad"><i class="fas fa-dumbbell"></i> Join Now</a>
+        <a href="#programs" class="btn btn-ghost">Explore Programs</a>
+      </div>
+      <div class="scroll-hint">Scroll<i class="fas fa-chevron-down"></i></div>
+    </div>
+  </header>
+
+  <!-- ============ STATS ============ -->
+  <div class="stats-band">
+    <div class="container stats-grid">
+      <div class="stat reveal"><div class="num"><span data-count="500">0</span>+</div><div class="lbl">Happy Members</div></div>
+      <div class="stat reveal reveal-d1"><div class="num"><span data-count="12">0</span></div><div class="lbl">Expert Trainers</div></div>
+      <div class="stat reveal reveal-d2"><div class="num"><span data-count="8">0</span>+</div><div class="lbl">Years Of Grind</div></div>
+      <div class="stat reveal reveal-d3"><div class="num"><span data-count="40">0</span>+</div><div class="lbl">Transformations</div></div>
+    </div>
+  </div>
+
+  <!-- ============ PROGRAMS ============ -->
+  <section id="programs">
+    <div class="container">
+      <h2 class="sec-title reveal">Training <span class="accent">Programs</span></h2>
+      <p class="sec-sub reveal">Target every muscle group with structured workout programs designed by our coaches.</p>
+      <div class="cards" id="programsGrid">
+        <p class="empty" style="grid-column:1/-1">Loading workouts…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CLASSES BY AGE ============ -->
+  <section id="classes" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+      <h2 class="sec-title reveal">Classes For <span class="accent">Every Age</span></h2>
+      <p class="sec-sub reveal">Safe, guided training batches — from young beginners to active seniors.</p>
+      <div class="cards">
+        <div class="card age-card reveal">
+          <div class="age"><span>18 – 29</span></div>
+          <p style="color:var(--muted);font-size:.9rem">Youth Power Batch</p>
+          <ul>
+            <li><i class="fas fa-check"></i>Strength & muscle building</li>
+            <li><i class="fas fa-check"></i>Athletic conditioning</li>
+            <li><i class="fas fa-check"></i>Fat-loss circuits</li>
+          </ul>
+        </div>
+        <div class="card age-card reveal reveal-d1">
+          <div class="age"><span>30 – 39</span></div>
+          <p style="color:var(--muted);font-size:.9rem">Prime Fitness Batch</p>
+          <ul>
+            <li><i class="fas fa-check"></i>Balanced strength plans</li>
+            <li><i class="fas fa-check"></i>Core & endurance work</li>
+            <li><i class="fas fa-check"></i>Weight management</li>
+          </ul>
+        </div>
+        <div class="card age-card reveal reveal-d2">
+          <div class="age"><span>40 – 49</span></div>
+          <p style="color:var(--muted);font-size:.9rem">Vitality Batch</p>
+          <ul>
+            <li><i class="fas fa-check"></i>Joint-friendly training</li>
+            <li><i class="fas fa-check"></i>Flexibility & mobility</li>
+            <li><i class="fas fa-check"></i>Posture correction</li>
+          </ul>
+        </div>
+        <div class="card age-card reveal reveal-d3">
+          <div class="age"><span>50+</span></div>
+          <p style="color:var(--muted);font-size:.9rem">Active Life Batch</p>
+          <ul>
+            <li><i class="fas fa-check"></i>Safe supervised routines</li>
+            <li><i class="fas fa-check"></i>Balance & bone strength</li>
+            <li><i class="fas fa-check"></i>Daily energy boost</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING ============ -->
+  <section id="pricing">
+    <div class="container">
+      <h2 class="sec-title reveal">Membership <span class="accent">Plans</span></h2>
+      <p class="sec-sub reveal">Simple pricing, no hidden charges. Pick the plan that matches your goal.</p>
+      <div class="pricing" id="pricingGrid">
+        <p class="empty" style="grid-column:1/-1">Loading plans…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MEMBERSHIP CARD ============ -->
+  <section id="member-card" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+      <h2 class="sec-title reveal">My <span class="accent">Membership Card</span></h2>
+      <p class="sec-sub reveal">Apna mobile number dalo — joining date se 1 saal tak ka month-by-month card dekho.</p>
+      <div class="bmi-box reveal">
+        <form id="cardForm">
+          <div class="field">
+            <label for="cardMobile">Mobile Number</label>
+            <input type="tel" id="cardMobile" placeholder="e.g. 8789537734" inputmode="numeric" required />
+          </div>
+          <button type="submit" class="btn btn-grad" style="width:100%;justify-content:center"><i class="fas fa-id-card"></i> Get My Card</button>
+        </form>
+        <div class="bmi-result" id="cardResult">
+          <p style="color:var(--muted)">Apna card dekhne ke liye upar mobile number dalo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRAINERS ============ -->
+  <section id="trainers">
+    <div class="container">
+      <h2 class="sec-title reveal">Meet Your <span class="accent">Trainers</span></h2>
+      <p class="sec-sub reveal">Certified coaches who train with you, not just watch you.</p>
+      <div class="cards" id="trainersGrid">
+        <p class="empty" style="grid-column:1/-1">Loading trainers…</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TESTIMONIALS ============ -->
+  <section id="reviews" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="container">
+      <h2 class="sec-title reveal">Member <span class="accent">Stories</span></h2>
+      <p class="sec-sub reveal">Real people. Real results.</p>
+      <div class="testi-wrap reveal">
+        <div class="testi-track">
+          <div class="testi active">
+            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <p>"Lost 12 kg in 4 months. Trainers personally check my diet every week — best gym in Giridih, no doubt."</p>
+            <div class="who">Rohit Mahto<small>Lost 12 kg · Member since 2024</small></div>
+          </div>
+          <div class="testi">
+            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <p>"As a beginner I was scared of heavy gyms. Here the coaches taught me every exercise step by step."</p>
+            <div class="who">Priya Singh<small>Gained strength · Member since 2025</small></div>
+          </div>
+          <div class="testi">
+            <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+            <p>"Good equipment, proper batches for every age, and fees that a student can afford. Highly recommended."</p>
+            <div class="who">Aman Verma<small>Muscle gain · Member since 2023</small></div>
+          </div>
+        </div>
+        <div class="testi-dots" id="testiDots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact">
+    <div class="container">
+      <h2 class="sec-title reveal">Get In <span class="accent">Touch</span></h2>
+      <p class="sec-sub reveal">Questions about fees, batches or diet plans? Message us — we reply fast.</p>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <div class="row">
+            <i class="fas fa-location-dot"></i>
+            <div><div class="h">Visit Us</div><div class="s">Bhandaridih, Giridih, Jharkhand</div></div>
+          </div>
+          <div class="row">
+            <i class="fas fa-phone"></i>
+            <div><div class="h">Call / WhatsApp</div><div class="s"><a href="tel:918789537734">+91 87895 37734</a></div></div>
+          </div>
+          <div class="row">
+            <i class="fas fa-envelope"></i>
+            <div><div class="h">Email</div><div class="s"><a href="mailto:ajim55539@gmail.com">ajim55539@gmail.com</a></div></div>
+          </div>
+          <div class="row">
+            <i class="fab fa-instagram"></i>
+            <div><div class="h">Instagram</div><div class="s"><a href="https://www.instagram.com/ajim___khan_09/" target="_blank" rel="noopener">@ajim___khan_09</a></div></div>
+          </div>
+          <button class="btn btn-whatsapp" id="waDirectBtn" style="width:100%;justify-content:center;margin-top:6px"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</button>
+        </div>
+        <form class="contact-form reveal reveal-d1" id="contactForm">
+          <div class="form-grid">
+            <div class="field"><label for="cfName">Name</label><input id="cfName" name="name" type="text" placeholder="Your name" required /></div>
+            <div class="field"><label for="cfMobile">Mobile</label><input id="cfMobile" name="mobile" type="tel" placeholder="10-digit mobile" required /></div>
+            <div class="field full"><label for="cfSubject">Subject</label><input id="cfSubject" name="subject" type="text" placeholder="e.g. Membership fees" /></div>
+            <div class="field full"><label for="cfMsg">Message</label><textarea id="cfMsg" name="message" rows="4" placeholder="Write your message..." required></textarea></div>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-grad"><i class="fas fa-paper-plane"></i> Send Message</button>
+          </div>
+          <p class="form-note"><i class="fas fa-database"></i> Your message is saved securely and also sent to us on WhatsApp instantly.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#home" class="logo">Arnold's <span class="accent">Gym</span></a>
+          <p style="margin-top:12px">Bhandaridih, Giridih's home for serious training — strength, discipline and community since day one.</p>
+          <div class="socials">
+            <a href="https://www.instagram.com/ajim___khan_09/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/918789537734" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:ajim55539@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#programs">Programs</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#trainers">Trainers</a></li>
+            <li><a href="Registration.html">Join Now</a></li>
+            <li><a href="login.html">Admin Login</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:918789537734"><i class="fas fa-phone"></i> +91 87895 37734</a></li>
+            <li><a href="mailto:ajim55539@gmail.com"><i class="fas fa-envelope"></i> ajim55539@gmail.com</a></li>
+            <li><i class="fas fa-location-dot"></i> Bhandaridih, Giridih, Jharkhand</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Arnold's Gym. All rights reserved.</span>
+        <span>Train hard. Stay humble.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/sheets.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

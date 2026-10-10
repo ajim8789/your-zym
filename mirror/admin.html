@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Arnold's Gym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+/* ============================================================
+   Arnold's Gym v2 — dark theme stylesheet
+   Palette:  bg #0b0b0f · accent gradient #ff3131 → #ff7a00
+   Fonts:    Oswald (headings) · Poppins (body)
+   ============================================================ */
+
+:root {
+  --bg: #0b0b0f;
+  --bg-2: #121218;
+  --bg-3: #18181f;
+  --card: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #f4f4f6;
+  --muted: #a7a7b3;
+  --red: #ff3131;
+  --orange: #ff7a00;
+  --grad: linear-gradient(135deg, #ff3131, #ff7a00);
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --radius: 16px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Poppins", system-ui, sans-serif;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, .font-head {
+  font-family: "Oswald", "Poppins", sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.container { width: min(1180px, 92%); margin: 0 auto; }
+section { padding: 84px 0; }
+
+.sec-title {
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.sec-title .accent {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sec-sub {
+  text-align: center;
+  color: var(--muted);
+  max-width: 620px;
+  margin: 0 auto 44px;
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 30px;
+  border-radius: 999px;
+  font-weight: 600; font-size: 0.95rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+.btn-grad {
+  background: var(--grad); color: #fff;
+  box-shadow: 0 10px 28px rgba(255, 49, 49, 0.35);
+}
+.btn-grad:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(255, 49, 49, 0.5); }
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border);
+  backdrop-filter: blur(8px);
+}
+.btn-ghost:hover { transform: translateY(-3px); border-color: var(--orange); }
+.btn-whatsapp { background: #1faa53; color: #fff; }
+.btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(31, 170, 83, 0.45); }
+.btn-sm { padding: 9px 18px; font-size: 0.82rem; }
+
+/* ---------- navbar ---------- */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  transition: background 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+  padding: 18px 0;
+}
+.navbar .nav-inner {
+  width: min(1180px, 92%); margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.navbar.scrolled {
+  background: rgba(11, 11, 15, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  padding: 12px 0;
+}
+.logo {
+  font-family: "Oswald", sans-serif;
+  font-size: 1.45rem; font-weight: 700; text-transform: uppercase;
+}
+.logo .accent {
+  background: var(--grad); -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}
+.nav-links { display: flex; gap: 28px; list-style: none; align-items: center; }
+.nav-links a { font-size: 0.93rem; color: var(--muted); font-weight: 500; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: #fff; }
+.nav-cta { padding: 10px 22px; }
+.hamburger { display: none; background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+/* ---------- hero ---------- */
+.hero {
+  min-height: 100svh;
+  display: flex; align-items: center;
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(700px 380px at 85% 15%, rgba(255, 122, 0, 0.16), transparent 60%),
+    radial-gradient(800px 460px at 8% 88%, rgba(255, 49, 49, 0.18), transparent 60%),
+    var(--bg);
+  padding-top: 110px;
+}
+/* floating shapes */
+.blob {
+  position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.5;
+  animation: float 11s ease-in-out infinite; pointer-events: none;
+}
+.blob-1 { width: 340px; height: 340px; background: #ff3131; top: -80px; right: 8%; animation-delay: 0s; }
+.blob-2 { width: 260px; height: 260px; background: #ff7a00; bottom: 6%; left: -60px; animation-delay: 2.5s; }
+.blob-3 { width: 190px; height: 190px; background: #7a1fff; top: 46%; right: 30%; animation-delay: 5s; opacity: 0.35; }
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-34px, 44px) scale(1.08); }
+}
+.hero-grid { position: relative; z-index: 2; text-align: center; max-width: 880px; margin: 0 auto; }
+.hero-kicker {
+  display: inline-block; padding: 8px 20px; border-radius: 999px;
+  background: rgba(255, 122, 0, 0.1); border: 1px solid rgba(255, 122, 0, 0.35);
+  color: var(--orange); font-size: 0.8rem; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 22px;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  line-height: 1.08; text-transform: uppercase; margin-bottom: 10px;
+}
+.hero h1 .typed-wrap { color: transparent; background: var(--grad); -webkit-background-clip: text; background-clip: text; }
+.hero p.lead { color: var(--muted); font-size: 1.05rem; max-width: 620px; margin: 18px auto 34px; }
+.hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.scroll-hint { margin-top: 54px; color: var(--muted); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
+.scroll-hint i { display: block; font-size: 1.3rem; margin-top: 8px; animation: bounce 1.8s infinite; color: var(--orange); }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+/* ---------- stats band ---------- */
+.stats-band {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 54px 0;
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center;
+}
+.stat .num {
+  font-family: "Oswald", sans-serif; font-size: clamp(2rem, 4.5vw, 3.1rem);
+  background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.stat .lbl { color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 6px; }
+
+/* ---------- cards ---------- */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 34px 26px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative; overflow: hidden;
+}
+.card:hover { transform: translateY(-8px); border-color: rgba(255, 122, 0, 0.55); box-shadow: var(--shadow); }
+.card .icon-ring {
+  width: 62px; height: 62px; border-radius: 18px;
+  display: grid; place-items: center; font-size: 1.6rem; color: #fff;
+  background: var(--grad); margin-bottom: 18px;
+  box-shadow: 0 8px 22px rgba(255, 49, 49, 0.4);
+}
+.card h3 { font-size: 1.2rem; margin-bottom: 8px; text-transform: uppercase; }
+.card p { color: var(--muted); font-size: 0.92rem; }
+
+/* program cards with zoom images */
+.program-card { padding: 0; min-height: 340px; display: flex; align-items: flex-end; }
+.program-card .bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform 0.6s ease;
+}
+.program-card:hover .bg { transform: scale(1.1); }
+.program-card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(5, 5, 8, 0.95) 8%, rgba(5, 5, 8, 0.25) 55%, transparent);
+}
+.program-card .info { position: relative; z-index: 2; padding: 26px; }
+.program-card .info h3 { font-size: 1.35rem; }
+.program-card .info p { font-size: 0.88rem; }
+.program-card .go {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 12px;
+  color: var(--orange); font-weight: 600; font-size: 0.88rem;
+}
+
+/* ---------- classes by age ---------- */
+.age-card { text-align: center; }
+.age-card .age {
+  font-family: "Oswald", sans-serif; font-size: 2.2rem; color: #fff; margin-bottom: 6px;
+}
+.age-card .age span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.age-card ul { list-style: none; margin-top: 14px; color: var(--muted); font-size: 0.9rem; }
+.age-card ul li { padding: 7px 0; border-top: 1px dashed var(--border); }
+.age-card ul li i { color: var(--green); margin-right: 8px; }
+
+/* ---------- pricing ---------- */
+.pricing { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; align-items: stretch; }
+.price-card { text-align: center; display: flex; flex-direction: column; }
+.price-card.popular {
+  border: 1px solid rgba(255, 122, 0, 0.6);
+  background: linear-gradient(180deg, rgba(255, 49, 49, 0.12), rgba(255, 122, 0, 0.06));
+  transform: scale(1.04);
+}
+.price-card.popular:hover { transform: scale(1.04) translateY(-8px); }
+.plan-tag {
+  align-self: center; font-size: 0.72rem; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; background: var(--grad); color: #fff;
+  padding: 6px 18px; border-radius: 999px; margin-bottom: 14px;
+}
+.price { font-family: "Oswald", sans-serif; font-size: 2.8rem; margin: 6px 0; }
+.price small { font-size: 1rem; color: var(--muted); font-family: "Poppins", sans-serif; }
+.price-card ul { list-style: none; margin: 18px 0 26px; color: var(--muted); font-size: 0.92rem; flex: 1; }
+.price-card ul li { padding: 8px 0; border-bottom: 1px dashed var(--border); }
+.price-card ul li i { color: var(--green); margin-right: 8px; }
+.price-card ul li.off { opacity: 0.45; }
+.price-card ul li.off i { color: var(--red); }
+
+/* ---------- BMI widget ---------- */
+.bmi-box {
+  max-width: 680px; margin: 0 auto;
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 40px 36px; backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.bmi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+.field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 8px; }
+.field input, .field select, .field textarea {
+  width: 100%; padding: 13px 16px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border); color: var(--text);
+  font-family: inherit; font-size: 0.95rem; outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--orange); }
+.field select option { background: #15151c; }
+.bmi-result {
+  margin-top: 22px; text-align: center; padding: 20px; border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03); border: 1px dashed var(--border);
+}
+.bmi-result .val { font-family: "Oswald", sans-serif; font-size: 2.4rem; }
+.bmi-result .cat { font-weight: 600; margin-top: 4px; }
+.bmi-bar { height: 10px; border-radius: 999px; margin: 14px 0 6px;
+  background: linear-gradient(90deg, #38bdf8 0 20%, #22c55e 20% 40%, #f59e0b 40% 60%, #ff3131 60% 100%); position: relative; }
+.bmi-marker { position: absolute; top: -6px; width: 4px; height: 22px; background: #fff; border-radius: 2px; transition: left 0.5s ease; }
+
+/* ---------- trainers ---------- */
+.trainer-card { text-align: center; padding: 28px 22px; }
+.trainer-photo {
+  width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 18px;
+  object-fit: cover; border: 3px solid transparent;
+  background: var(--grad) border-box;
+  box-shadow: 0 10px 30px rgba(255, 49, 49, 0.35);
+}
+.trainer-avatar {
+  width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 18px;
+  display: grid; place-items: center;
+  font-family: "Oswald", sans-serif; font-size: 3rem; color: #fff;
+  background: var(--grad);
+  box-shadow: 0 10px 30px rgba(255, 49, 49, 0.35);
+}
+.trainer-role { color: var(--orange); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 2px; margin: 4px 0 10px; }
+.trainer-actions { display: flex; gap: 10px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+
+/* ---------- testimonials ---------- */
+.testi-wrap { max-width: 760px; margin: 0 auto; position: relative; }
+.testi-track { position: relative; min-height: 230px; }
+.testi {
+  position: absolute; inset: 0; opacity: 0; transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  text-align: center; padding: 36px 30px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+.testi.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.testi .stars { color: var(--amber); letter-spacing: 4px; margin-bottom: 12px; }
+.testi p { color: var(--muted); font-style: italic; }
+.testi .who { margin-top: 16px; font-weight: 600; }
+.testi .who small { display: block; color: var(--orange); font-weight: 400; font-size: 0.8rem; }
+.testi-dots { display: flex; gap: 10px; justify-content: center; margin-top: 22px; }
+.testi-dots button {
+  width: 10px; height: 10px; border-radius: 50%; border: none; cursor: pointer;
+  background: rgba(255, 255, 255, 0.2); transition: background 0.3s, transform 0.3s;
+}
+.testi-dots button.active { background: var(--grad); transform: scale(1.35); }
+
+/* ---------- contact ---------- */
+.contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 34px; align-items: start; }
+.contact-info .row {
+  display: flex; gap: 16px; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px; margin-bottom: 14px;
+}
+.contact-info .row i {
+  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
+  display: grid; place-items: center; background: var(--grad); color: #fff; font-size: 1.1rem;
+}
+.contact-info .row .h { font-weight: 600; font-size: 0.95rem; }
+.contact-info .row .s { color: var(--muted); font-size: 0.88rem; word-break: break-word; }
+.contact-form {
+  background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+  padding: 36px 30px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-grid .full { grid-column: 1 / -1; }
+.form-actions { display: flex; gap: 14px; margin-top: 20px; flex-wrap: wrap; }
+.form-note { font-size: 0.8rem; color: var(--muted); margin-top: 14px; }
+.form-note i { color: var(--green); }
+
+/* ---------- footer ---------- */
+footer {
+  border-top: 1px solid var(--border); background: var(--bg-2);
+  padding: 54px 0 26px; margin-top: 40px;
+}
+.footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 30px; margin-bottom: 36px; }
+.footer-grid h4 { margin-bottom: 14px; text-transform: uppercase; font-size: 0.95rem; }
+.footer-grid ul { list-style: none; }
+.footer-grid ul li { margin-bottom: 9px; }
+.footer-grid ul a, .footer-grid p { color: var(--muted); font-size: 0.9rem; }
+.footer-grid ul a:hover { color: var(--orange); }
+.socials { display: flex; gap: 12px; margin-top: 16px; }
+.socials a {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border);
+  transition: background 0.25s, transform 0.25s;
+}
+.socials a:hover { background: var(--grad); transform: translateY(-3px); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 22px;
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--muted); font-size: 0.82rem; flex-wrap: wrap; gap: 10px;
+}
+
+/* ---------- reveal on scroll ---------- */
+.reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: 0.1s; } .reveal-d2 { transition-delay: 0.2s; } .reveal-d3 { transition-delay: 0.3s; }
+
+/* ---------- toast ---------- */
+.toast {
+  position: fixed; bottom: 26px; right: 26px; z-index: 9999;
+  background: #15151c; border: 1px solid var(--border); border-left: 4px solid var(--green);
+  color: var(--text); padding: 15px 20px; border-radius: 12px; font-size: 0.9rem;
+  box-shadow: var(--shadow); max-width: min(360px, 86vw);
+  transform: translateY(140%); transition: transform 0.4s ease;
+}
+.toast.show { transform: none; }
+.toast.error { border-left-color: var(--red); }
+.toast i { margin-right: 9px; }
+.toast.ok i { color: var(--green); } .toast.error i { color: var(--red); }
+
+/* ---------- modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(5, 5, 8, 0.7); backdrop-filter: blur(6px);
+  display: none; align-items: center; justify-content: center; padding: 18px;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  width: min(520px, 100%); max-height: 90vh; overflow: auto;
+  background: var(--bg-3); border: 1px solid var(--border); border-radius: 20px;
+  padding: 30px 28px; box-shadow: var(--shadow);
+}
+.modal h3 { margin-bottom: 18px; }
+.modal .form-grid { margin-bottom: 6px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 960px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+}
+@media (max-width: 1024px) {
+  /* tablet + phone: hamburger menu (6 links + CTA fit nahi hote) */
+  .nav-links {
+    position: fixed; inset: 0 0 0 30%;
+    background: rgba(11, 11, 15, 0.97); backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    flex-direction: column; justify-content: center; gap: 30px;
+    transform: translateX(100%); transition: transform 0.35s ease;
+    z-index: 100;
+  }
+  .nav-links.open { transform: none; }
+  .nav-links a { font-size: 1.15rem; }
+  .hamburger { display: block; z-index: 101; position: relative; }
+}
+@media (max-width: 720px) {
+  section { padding: 64px 0; }
+  .bmi-row, .form-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .price-card.popular { transform: none; }
+  .price-card.popular:hover { transform: translateY(-8px); }
+  /* iOS auto-zoom fix: input 16px se chhota nahi */
+  .field input, .field select, .field textarea { font-size: 16px; }
+  .modal { padding: 24px 20px; }
+  .testi-track { min-height: 340px; }
+  .testi { padding: 28px 20px; }
+}
+@media (max-width: 480px) {
+  /* compact phone view: sab kuchh ek screen me fit ho */
+  section { padding: 44px 0; }
+  .container { width: min(1180px, 94%); }
+  .sec-title { font-size: 1.55rem; }
+  .sec-sub { font-size: .88rem; margin-bottom: 30px; }
+  .hero { padding-top: 96px; }
+  .hero h1 { font-size: 2rem; }
+  .hero p.lead { font-size: .92rem; margin-bottom: 26px; }
+  .hero-kicker { font-size: .68rem; padding: 6px 16px; margin-bottom: 16px; }
+  .hero-cta { gap: 10px; }
+  .hero-cta .btn { width: 100%; justify-content: center; padding: 12px 20px; font-size: .86rem; }
+  .scroll-hint { margin-top: 36px; }
+  .bmi-box { padding: 26px 18px; }
+  .contact-form { padding: 26px 18px; }
+  .card { padding: 24px 18px; }
+  .card h3 { font-size: 1.05rem; }
+  .card .icon-ring { width: 52px; height: 52px; font-size: 1.3rem; margin-bottom: 14px; }
+  .stats-grid { gap: 14px; }
+  .stat .lbl { font-size: 0.7rem; }
+  .price { font-size: 2.1rem; }
+  .price-card ul { font-size: .85rem; }
+  .trainer-photo, .trainer-avatar { width: 118px; height: 118px; }
+  .trainer-card { padding: 24px 16px; }
+  .testi { font-size: .88rem; }
+  .mcard { padding: 18px 14px; }
+  .mcard-months { grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); }
+  .mcard-gym { font-size: 1.1rem; }
+  .mcard-name { font-size: 1.1rem; }
+  .footer-grid { gap: 22px; }
+  .footer-bottom { justify-content: center; text-align: center; }
+  .toast { bottom: 14px; right: 14px; left: 14px; max-width: none; font-size: .82rem; }
+}
+
+/* ---------- v2: announcement bar ---------- */
+.announce-bar {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 10px 18px; font-size: .82rem; font-weight: 600; text-align: center;
+  color: #fff; background: linear-gradient(90deg, #b91c1c, #ea580c, #b91c1c);
+  background-size: 200% 100%; animation: announceSlide 8s linear infinite;
+  position: relative; z-index: 60;
+}
+.announce-bar[hidden] { display: none; }
+.announce-bar i { color: #ffe08a; }
+@keyframes announceSlide { to { background-position: 200% 0; } }
+
+/* ---------- v2: admin checkbox fields ---------- */
+.field.check { display: flex; align-items: center; }
+.field.check label { display: flex; align-items: center; gap: 10px; margin: 0; cursor: pointer; color: var(--text); font-size: .9rem; }
+.field.check input[type="checkbox"] { width: 19px; height: 19px; accent-color: #ea580c; cursor: pointer; }
+
+/* ---------- v2: admin thumb in tables ---------- */
+.table-thumb { width: 74px; height: 44px; border-radius: 8px; object-fit: cover; }
+
+/* ---------- membership card (website) ---------- */
+.mcard { background: linear-gradient(135deg, #1b1b24, #101016); border: 1px solid var(--border); border-radius: 18px; padding: 24px; margin-top: 18px; position: relative; overflow: hidden; }
+.mcard::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: var(--grad); }
+.mcard-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+.mcard-gym { font-family: "Oswald", sans-serif; font-size: 1.35rem; font-weight: 700; letter-spacing: 1px; }
+.mcard-tag { font-size: .72rem; letter-spacing: 3px; color: var(--muted); margin-top: 2px; }
+.mcard-name { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }
+.mcard-meta { display: flex; gap: 18px; flex-wrap: wrap; color: var(--muted); font-size: .88rem; margin-bottom: 16px; }
+.mcard-meta i { color: var(--orange); margin-right: 6px; }
+.mcard-dates { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.mcard-dates > div { background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; }
+.mcard-dates span { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+.mcard-dates b { font-size: .95rem; }
+.mcard-months { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.mchip { border: 1px solid var(--border); border-radius: 10px; padding: 8px 6px; text-align: center; background: rgba(255,255,255,.03); }
+.mchip b { display: block; font-size: .78rem; margin-bottom: 3px; }
+.mchip span { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.mchip.paid { border-color: rgba(34,197,94,.5); background: rgba(34,197,94,.08); }
+.mchip.paid span { color: #4ade80; }
+.mchip.done { border-color: rgba(148,163,184,.35); }
+.mchip.done span { color: #94a3b8; }
+.mchip.due { border-color: rgba(245,158,11,.5); background: rgba(245,158,11,.07); }
+.mchip.due span { color: #fbbf24; }
+
+/* ---------- badges (website) ---------- */
+.badge { display: inline-block; padding: 5px 13px; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+.badge.active { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.4); }
+.badge.expired { background: rgba(255,49,49,.15); color: #ff8080; border: 1px solid rgba(255,49,49,.4); }
+
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { display: flex; min-height: 100svh; }
+    /* ---- sidebar ---- */
+    .sidebar {
+      width: 250px; flex-shrink: 0; background: var(--bg-2);
+      border-right: 1px solid var(--border); padding: 26px 18px;
+      position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column;
+    }
+    .sidebar .logo { font-size: 1.2rem; margin-bottom: 30px; padding: 0 8px; }
+    .side-link {
+      display: flex; align-items: center; gap: 13px; width: 100%;
+      padding: 13px 14px; border-radius: 12px; border: none; background: none;
+      color: var(--muted); font-family: inherit; font-size: .93rem; font-weight: 500;
+      cursor: pointer; margin-bottom: 6px; text-align: left;
+      transition: background .2s, color .2s;
+    }
+    .side-link i { width: 20px; text-align: center; }
+    .side-link:hover { background: rgba(255,255,255,.05); color: #fff; }
+    .side-link.active { background: var(--grad); color: #fff; box-shadow: 0 8px 20px rgba(255,49,49,.35); }
+    .side-foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); }
+    /* ---- main ---- */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar {
+      position: sticky; top: 0; z-index: 50; padding: 16px 28px;
+      background: rgba(11,11,15,.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .topbar h2 { font-size: 1.25rem; text-transform: uppercase; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .sync-badge {
+      display: inline-flex; align-items: center; gap: 9px; font-size: .8rem; font-weight: 600;
+      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .sync-badge .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .sync-badge.online .dot { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .sync-badge.offline .dot { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+    .content { padding: 28px; }
+    .view { display: none; } .view.active { display: block; animation: fadeUp .4s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+    /* ---- stat cards ---- */
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 26px; }
+    .stat-card { display: flex; align-items: center; gap: 16px; padding: 24px; }
+    .stat-card .ic { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 1.3rem; color: #fff; background: var(--grad); flex-shrink: 0; }
+    .stat-card .n { font-family: "Oswald", sans-serif; font-size: 1.9rem; line-height: 1.1; }
+    .stat-card .l { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; }
+    .panel { margin-bottom: 26px; padding: 26px; }
+    .panel h3 { margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .panel h3 i { color: var(--orange); }
+    /* ---- tables ---- */
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table.data { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 640px; }
+    table.data th { background: rgba(255,255,255,.05); text-align: left; padding: 13px 14px; font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); white-space: nowrap; }
+    table.data td { padding: 13px 14px; border-top: 1px solid var(--border); vertical-align: middle; }
+    table.data tr:hover td { background: rgba(255,255,255,.02); }
+    .badge { display: inline-block; padding: 5px 13px; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+    .badge.active { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.4); }
+    .badge.expiring { background: rgba(245,158,11,.15); color: #fbbf24; border: 1px solid rgba(245,158,11,.4); }
+    .badge.expired { background: rgba(255,49,49,.15); color: #ff8080; border: 1px solid rgba(255,49,49,.4); }
+    .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .icon-btn { border: none; cursor: pointer; border-radius: 9px; padding: 8px 11px; font-size: .82rem; color: #fff; transition: transform .2s, opacity .2s; }
+    .icon-btn:hover { transform: translateY(-2px); }
+    .icon-btn.edit { background: #b45309; } .icon-btn.del { background: #b91c1c; }
+    .icon-btn.wa { background: #1faa53; } .icon-btn.info { background: #1d4ed8; }
+    .toolbar { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+    .search-box { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .search-box input { padding-left: 40px; }
+    .toolbar .spacer { flex: 1; }
+    .alert-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid rgba(245,158,11,.35); background: rgba(245,158,11,.07); border-radius: 12px; margin-bottom: 10px; font-size: .9rem; }
+    .alert-item.red { border-color: rgba(255,49,49,.35); background: rgba(255,49,49,.07); }
+    /* attendance toggles */
+    .att-toggle { display: inline-flex; border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+    .att-toggle button { border: none; background: rgba(255,255,255,.04); color: var(--muted); padding: 8px 18px; font-family: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
+    .att-toggle button.p.on { background: var(--green); color: #fff; }
+    .att-toggle button.a.on { background: var(--red); color: #fff; }
+    .code-box { background: #0a0a0e; border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-family: monospace; font-size: .82rem; color: #9be29b; word-break: break-all; margin: 12px 0; }
+    .steps { color: var(--muted); font-size: .9rem; padding-left: 20px; }
+    .steps li { margin-bottom: 10px; }
+    .steps b, .steps strong { color: var(--text); }
+    .mobile-menu-btn { display: none; }
+    .empty { text-align: center; color: var(--muted); padding: 34px 10px; }
+    /* ---- 5-sec loading popup ---- */
+    .loader-pop { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+    .loader-pop[hidden] { display: none; }
+    .loader-card { background: #fff; border-radius: 20px; padding: 30px 34px 34px; width: min(430px, 88vw); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+    .loader-title { color: #111; font-weight: 800; letter-spacing: 3px; text-align: center; margin-bottom: 18px; font-size: 1.05rem; font-family: "Oswald", sans-serif; }
+    .loader-bar { height: 40px; border-radius: 999px; padding: 4px; border: 4px solid transparent;
+      background: linear-gradient(#fff,#fff) padding-box, linear-gradient(90deg,#ec4899,#f43f5e,#ef4444) border-box; }
+    .loader-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg,#ec4899,#f43f5e,#ef4444); position: relative; }
+    .loader-knob { position: absolute; right: -4px; top: 50%; transform: translate(50%,-50%); width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 5px solid #f43f5e; box-shadow: 0 2px 10px rgba(244,63,94,.55); }
+    /* ---- receipt print ---- */
+    .rcpt-chip { display: inline-block; padding: 5px 12px; border-radius: 999px; font-size: .75rem; font-weight: 600; background: #f1f1f4; color: #333; margin: 0 6px 6px 0; border: 1px solid #ddd; }
+    @media print {
+      body * { visibility: hidden; }
+      #receiptPrint, #receiptPrint * { visibility: visible; }
+      #receiptPrint { position: absolute; left: 0; top: 0; width: 100%; overflow: visible; }
+      .no-print { display: none !important; }
+    }
+    /* receipt ka size fix: phone/tab/laptop/PC sab par 560px, chhoti screen par scroll */
+    #receiptPrint { overflow-x: auto; }
+    @media (max-width: 900px) {
+      .sidebar { position: fixed; left: 0; top: 0; z-index: 200; transform: translateX(-105%); transition: transform .3s ease; }
+      .sidebar.open { transform: none; box-shadow: var(--shadow); }
+      .mobile-menu-btn { display: inline-flex; }
+      .content { padding: 18px; }
+      .topbar { padding: 14px 18px; }
+      .topbar h2 { font-size: 1.05rem; }
+    }
+    @media (max-width: 720px) {
+      .topbar { flex-wrap: wrap; row-gap: 10px; }
+      .sync-badge { font-size: .72rem; padding: 6px 12px; }
+      .toolbar .search-box { max-width: none; flex-basis: 100%; }
+      .toolbar .btn { flex: 1; justify-content: center; }
+      .stat-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .stat-card { padding: 18px 14px; }
+      .stat-card .ic { width: 44px; height: 44px; font-size: 1.05rem; }
+      .stat-card .n { font-size: 1.5rem; }
+      .stat-card .l { font-size: .68rem; }
+      /* mobile: tables become compact cards — sab kuchh ek saath visible, chhota font */
+      .table-wrap { overflow: visible; border: none; }
+      table.data { min-width: 0; font-size: .76rem; }
+      table.data thead { display: none; }
+      table.data tbody { display: grid; gap: 10px; }
+      table.data tr {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 14px; padding: 12px 14px;
+      }
+      table.data tr:hover td { background: none; }
+      table.data td {
+        border: none; padding: 3px 0; min-width: 0;
+        display: flex; align-items: center; gap: 7px;
+      }
+      table.data td::before {
+        content: attr(data-label);
+        font-size: .58rem; font-weight: 600; text-transform: uppercase; letter-spacing: .6px;
+        color: var(--muted); flex-shrink: 0; min-width: 56px;
+      }
+      table.data td.cell-main {
+        grid-column: 1 / -1; font-size: .95rem;
+        padding-bottom: 7px; margin-bottom: 4px;
+        border-bottom: 1px dashed var(--border);
+      }
+      table.data td.cell-main::before { display: none; }
+      table.data td.cell-act { grid-column: 1 / -1; padding-top: 8px; }
+      table.data td.cell-act::before { display: none; }
+      table.data td.cell-no { display: none; }
+      table.data td.empty { grid-column: 1 / -1; justify-content: center; text-align: center; }
+      table.data td.empty::before { display: none; }
+      .row-actions { gap: 6px; }
+      .icon-btn { padding: 7px 10px; font-size: .74rem; }
+      .badge { font-size: .62rem; padding: 3px 9px; }
+      .panel { padding: 20px 16px; }
+      .modal { padding: 24px 18px; }
+      .form-actions .btn { flex: 1; justify-content: center; }
+      .alert-item { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 400px) {
+      .content { padding: 14px 12px; }
+      .topbar h2 { font-size: .95rem; }
+      .stat-cards { gap: 10px; }
+      .stat-card { flex-direction: column; text-align: center; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <a href="https://muse.ai/files/1360301033830820/1872163737463658/rnxloox1wzwol1sei58xtuti/index.html" class="logo">Arnold's <span class="accent" style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">Gym</span></a>
+    <nav>
+      <button class="side-link active" data-view="overview"><i class="fas fa-gauge-high"></i> Overview</button>
+      <button class="side-link" data-view="members"><i class="fas fa-users"></i> Members</button>
+      <button class="side-link" data-view="staff"><i class="fas fa-user-tie"></i> Staff</button>
+      <button class="side-link" data-view="attendance"><i class="fas fa-clipboard-check"></i> Attendance</button>
+      <button class="side-link" data-view="content"><i class="fas fa-pen-to-square"></i> Website Content</button>
+      <button class="side-link" data-view="plans"><i class="fas fa-tags"></i> Membership Plans</button>
+      <button class="side-link" data-view="trainers"><i class="fas fa-dumbbell"></i> Trainers</button>
+      <button class="side-link" data-view="workouts"><i class="fas fa-list-check"></i> Workouts</button>
+      <button class="side-link" data-view="settings"><i class="fas fa-gear"></i> Settings</button>
+    </nav>
+    <div class="side-foot">
+      <button class="side-link" id="viewSiteBtn"><i class="fas fa-globe"></i> View Website</button>
+      <button class="side-link" id="logoutBtn" style="color:#ff8080"><i class="fas fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-ghost btn-sm mobile-menu-btn" id="sideToggle"><i class="fas fa-bars"></i></button>
+        <h2 id="viewTitle">Overview</h2>
+      </div>
+      <div class="topbar-right">
+        <span class="sync-badge offline" id="syncBadge"><span class="dot"></span><span id="syncText">Checking…</span></span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== OVERVIEW ===== -->
+      <div class="view active" id="view-overview">
+        <div class="stat-cards">
+          <div class="card stat-card"><div class="ic"><i class="fas fa-users"></i></div><div><div class="n" id="stTotal">0</div><div class="l">Total Members</div></div></div>
+          <div class="card stat-card"><div class="ic" style="background:linear-gradient(135deg,#22c55e,#16a34a)"><i class="fas fa-circle-check"></i></div><div><div class="n" id="stActive">0</div><div class="l">Active</div></div></div>
+          <div class="card stat-card"><div class="ic" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-triangle-exclamation"></i></div><div><div class="n" id="stExpiring">0</div><div class="l">Needs renewal</div></div></div>
+          <div class="card stat-card"><div class="ic" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)"><i class="fas fa-indian-rupee-sign"></i></div><div><div class="n" id="stRevenue">₹0</div><div class="l">Revenue (30 days)</div></div></div>
+        </div>
+        <div class="card panel">
+          <h3><i class="fas fa-bell"></i> Expiring Soon — Renewal Reminders</h3>
+          <div id="expiryAlerts"><p class="empty">Loading…</p></div>
+        </div>
+      </div>
+
+      <!-- ===== MEMBERS ===== -->
+      <div class="view" id="view-members">
+        <div class="toolbar">
+          <div class="search-box"><i class="fas fa-search"></i><input type="text" id="memberSearch" placeholder="Search name / mobile…" /></div>
+          <div class="spacer"></div>
+          <button class="btn btn-ghost btn-sm" id="exportCsvBtn"><i class="fas fa-file-csv"></i> Export CSV</button>
+          <button class="btn btn-grad btn-sm" id="addMemberBtn"><i class="fas fa-plus"></i> Add Member</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr>
+                <th>Name</th><th>Mobile</th><th>Plan</th><th>Payment</th><th>Valid Till</th><th>Days Left</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="memberRows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== STAFF ===== -->
+      <div class="view" id="view-staff">
+        <div class="toolbar">
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="addStaffBtn"><i class="fas fa-plus"></i> Add Staff</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Name</th><th>Role</th><th>Salary</th><th>Actions</th></tr></thead>
+              <tbody id="staffRows"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ATTENDANCE ===== -->
+      <div class="view" id="view-attendance">
+        <div class="toolbar">
+          <div class="field" style="min-width:200px"><label for="attDate">Date</label><input type="date" id="attDate" /></div>
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="saveAttBtn"><i class="fas fa-floppy-disk"></i> Save Attendance</button>
+          <button class="btn btn-whatsapp btn-sm" id="attWaBtn"><i class="fab fa-whatsapp"></i> Send on WhatsApp</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>#</th><th>Name</th><th>Role</th><th>Status</th></tr></thead>
+              <tbody id="attRows"><tr><td colspan="4" class="empty">Loading staff…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== WEBSITE CONTENT ===== -->
+      <div class="view" id="view-content">
+        <div class="card panel">
+          <h3><i class="fas fa-pen-to-square"></i> Home Page Content</h3>
+          <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">These texts appear on the website home page. Changes go live immediately.</p>
+          <form id="siteContentForm">
+            <div class="form-grid">
+              <div class="field"><label>Hero Line 1</label><input id="scHero1" type="text" placeholder="Win That Battle" /></div>
+              <div class="field"><label>Hero Line 2</label><input id="scHero2" type="text" placeholder="In Your Mind" /></div>
+              <div class="field full"><label>Hero rotating words (comma separated)</label><input id="scTyped" type="text" placeholder="Build Muscle., Burn Fat., Stay Disciplined." /></div>
+              <div class="field full"><label>Announcement bar text</label><input id="scAnnounce" type="text" placeholder="New batches start every Monday…" /></div>
+              <div class="field full"><label>WhatsApp message template <span style="color:var(--muted);font-weight:400">(use {name}, {mobile}, {subject}, {message})</span></label><textarea id="scWaMsg" rows="5"></textarea></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-floppy-disk"></i> Save Website Content</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== MEMBERSHIP PLANS ===== -->
+      <div class="view" id="view-plans">
+        <div class="toolbar">
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="addPlanBtn"><i class="fas fa-plus"></i> Add Plan</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Plan</th><th>Price</th><th>Duration</th><th>Facilities</th><th>Popular</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody id="planRows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TRAINERS ===== -->
+      <div class="view" id="view-trainers">
+        <div class="toolbar">
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="addTrainerBtn"><i class="fas fa-plus"></i> Add Trainer</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Photo</th><th>Name</th><th>Position</th><th>Phone</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody id="trainerRows"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== WORKOUTS ===== -->
+      <div class="view" id="view-workouts">
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">Each workout gets its own detail page on the website (<span style="font-family:monospace">https://muse.ai/files/1360301033830820/2213724986689128/hp6ako4tav9ovw1gg9zcmq75/workout.html?w=slug</span>).</p>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Cover</th><th>Title</th><th>Page Link</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody id="workoutRows"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS ===== -->
+      <div class="view" id="view-settings">
+        <div class="card panel">
+          <h3><i class="fas fa-signature"></i> Gym Name</h3>
+          <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">Ye naam poori website, admin panel aur WhatsApp messages me <b style="color:var(--text)">har jagah</b> badal jayega.</p>
+          <div class="form-grid">
+            <div class="field full"><label>Gym ka naam</label><input id="gymNameInput" type="text" placeholder="Arnold's Gym" maxlength="60" /></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-grad btn-sm" id="saveGymNameBtn"><i class="fas fa-floppy-disk"></i> Save Gym Name</button>
+          </div>
+        </div>
+        <div class="card panel">
+          <h3><i class="fas fa-cloud"></i> Google Sheets Backend</h3>
+          <p style="color:var(--muted);font-size:.9rem;margin-bottom:6px">Configured Web App URL:</p>
+          <div class="code-box" id="cfgUrl">(not set — running in Demo Mode)</div>
+          <p style="color:var(--muted);font-size:.9rem">
+            To connect live Google Sheets: open <b>SETUP-GUIDE.md</b> in the project folder and follow the
+            5 steps (create Sheet → paste Code.gs → Deploy as Web App → paste URL into
+            <b>assets/config.js</b> → refresh this page). The badge in the top bar will turn green.
+          </p>
+        </div>
+        <div class="card panel">
+          <h3><i class="fas fa-table"></i> Expected Sheet Tabs</h3>
+          <div class="table-wrap">
+            <table class="data">
+              <thead><tr><th>Tab</th><th>Columns (auto-created)</th></tr></thead>
+              <tbody>
+                <tr><td><b>Members</b></td><td>id, name, payment, validity, email, mobile, plan, created, photo</td></tr>
+                <tr><td><b>Staff</b></td><td>id, name, role, salary</td></tr>
+                <tr><td><b>Attendance</b></td><td>id, date, name, status</td></tr>
+                <tr><td><b>Registrations</b></td><td>id, name, email, mobile, gender, plan, password, created</td></tr>
+                <tr><td><b>Contacts</b></td><td>id, name, mobile, subject, message, created</td></tr>
+                <tr><td><b>SiteContent</b></td><td>id, key, value</td></tr>
+                <tr><td><b>Plans</b></td><td>id, name, price, duration, facilities, popular, active</td></tr>
+                <tr><td><b>Trainers</b></td><td>id, name, role, photo, bio, phone, active</td></tr>
+                <tr><td><b>Workouts</b></td><td>id, slug, title, cover, intro, details, steps, donts, notes, active</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ LOADING POPUP (5 sec, har save/delete par) ============ -->
+  <div class="loader-pop" id="loaderPop" hidden>
+    <div class="loader-card">
+      <div class="loader-title">LOADING.....</div>
+      <div class="loader-bar"><div class="loader-fill" id="loaderFill"><span class="loader-knob"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ============ RECEIPT MODAL ============ -->
+  <div class="modal-backdrop" id="receiptModal">
+    <div class="modal" style="width:min(640px,100%);max-width:640px">
+      <div id="receiptPrint"></div>
+      <div class="form-actions no-print" style="margin-top:18px">
+        <button type="button" class="btn btn-grad btn-sm" onclick="printReceipt()"><i class="fas fa-print"></i> Print</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="saveReceiptJPG()"><i class="fas fa-image"></i> Save JPG</button>
+        <button type="button" class="btn btn-whatsapp btn-sm" onclick="shareReceipt()"><i class="fab fa-whatsapp"></i> Share</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MEMBER MODAL ============ -->
+  <div class="modal-backdrop" id="memberModal">
+    <div class="modal">
+      <h3 id="memberModalTitle">Add Member</h3>
+      <form id="memberForm">
+        <input type="hidden" id="mId" />
+        <div class="form-grid">
+          <div class="field full"><label>Full Name</label><input id="mName" type="text" required /></div>
+          <div class="field"><label>Mobile / WhatsApp No.</label><input id="mMobile" type="tel" placeholder="10-digit mobile number" /></div>
+          <div class="field"><label>Email</label><input id="mEmail" type="email" /></div>
+          <div class="field"><label>Plan</label>
+            <select id="mPlan"><option>Monthly</option><option>Quarterly</option><option>Yearly</option></select>
+          </div>
+          <div class="field"><label>Payment (₹)</label><input id="mPayment" type="number" min="0" required /></div>
+          <div class="field full"><label>Valid Until</label><input id="mValidity" type="date" required /></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ STAFF MODAL ============ -->
+  <div class="modal-backdrop" id="staffModal">
+    <div class="modal">
+      <h3 id="staffModalTitle">Add Staff</h3>
+      <form id="staffForm">
+        <input type="hidden" id="sId" />
+        <div class="form-grid">
+          <div class="field full"><label>Name</label><input id="sName" type="text" required /></div>
+          <div class="field"><label>Role</label><input id="sRole" type="text" placeholder="Trainer / Manager" required /></div>
+          <div class="field"><label>Salary (₹)</label><input id="sSalary" type="number" min="0" required /></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ PLAN MODAL ============ -->
+  <div class="modal-backdrop" id="planModal">
+    <div class="modal">
+      <h3 id="planModalTitle">Add Plan</h3>
+      <form id="planForm">
+        <input type="hidden" id="pId" />
+        <div class="form-grid">
+          <div class="field"><label>Plan Name</label><input id="pName" type="text" placeholder="Monthly" required /></div>
+          <div class="field"><label>Price (₹)</label><input id="pPrice" type="number" min="0" placeholder="800" required /></div>
+          <div class="field full"><label>Duration label</label><input id="pDuration" type="text" placeholder="/month" /></div>
+          <div class="field full"><label>Facilities <span style="color:var(--muted);font-weight:400">(one per line)</span></label><textarea id="pFacilities" rows="4" placeholder="Full gym access&#10;Diet chart guidance"></textarea></div>
+          <div class="field check"><label><input id="pPopular" type="checkbox" /> Mark as Popular</label></div>
+          <div class="field check"><label><input id="pActive" type="checkbox" checked /> Show on website</label></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ TRAINER MODAL ============ -->
+  <div class="modal-backdrop" id="trainerModal">
+    <div class="modal">
+      <h3 id="trainerModalTitle">Add Trainer</h3>
+      <form id="trainerForm">
+        <input type="hidden" id="tId" />
+        <div class="form-grid">
+          <div class="field"><label>Name</label><input id="tName" type="text" placeholder="Md Ajim" required /></div>
+          <div class="field"><label>Position / Role</label><input id="tRole" type="text" placeholder="Head Trainer" required /></div>
+          <div class="field full"><label>Photo URL <span style="color:var(--muted);font-weight:400">(leave empty for initials avatar)</span></label><input id="tPhoto" type="url" placeholder="https://…" /></div>
+          <div class="field full" style="text-align:center"><img id="tPhotoPreview" alt="" style="max-height:120px;border-radius:12px;display:none" /></div>
+          <div class="field"><label>Phone (WhatsApp)</label><input id="tPhone" type="tel" placeholder="918789537734" /></div>
+          <div class="field check"><label><input id="tActive" type="checkbox" checked /> Show on website</label></div>
+          <div class="field full"><label>Bio</label><textarea id="tBio" rows="3" placeholder="Short intro about the trainer…"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ WORKOUT MODAL ============ -->
+  <div class="modal-backdrop" id="workoutModal">
+    <div class="modal" style="max-width:640px">
+      <h3 id="workoutModalTitle">Edit Workout</h3>
+      <form id="workoutForm">
+        <input type="hidden" id="wId" />
+        <div class="form-grid">
+          <div class="field"><label>Title</label><input id="wTitle" type="text" required /></div>
+          <div class="field"><label>Page slug</label><input id="wSlug" type="text" placeholder="arms" required /></div>
+          <div class="field full"><label>Cover image URL</label><input id="wCover" type="url" placeholder="https://…" /></div>
+          <div class="field full" style="text-align:center"><img id="wCoverPreview" alt="" style="max-height:140px;border-radius:12px;display:none" /></div>
+          <div class="field full"><label>Short intro</label><textarea id="wIntro" rows="2"></textarea></div>
+          <div class="field full"><label>Details chips <span style="color:var(--muted);font-weight:400">(e.g. 4 exercises · 45 min · All levels)</span></label><input id="wDetails" type="text" /></div>
+          <div class="field full"><label>Steps <span style="color:var(--muted);font-weight:400">(one per line, in order)</span></label><textarea id="wSteps" rows="5"></textarea></div>
+          <div class="field full"><label>What NOT to do <span style="color:var(--muted);font-weight:400">(one per line)</span></label><textarea id="wDonts" rows="4"></textarea></div>
+          <div class="field full"><label>Important notes <span style="color:var(--muted);font-weight:400">(one per line)</span></label><textarea id="wNotes" rows="4"></textarea></div>
+          <div class="field check"><label><input id="wActive" type="checkbox" checked /> Show on website</label></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+/* ============================================================
+   assets/config.js — site-wide configuration
+   ------------------------------------------------------------
+   WEB_APP_URL : paste the Google Apps Script "Web app" URL here
+   after deploying Code.gs (see SETUP-GUIDE.md).
+
+   Example: "https://script.google.com/macros/s/AKfycb.../exec"
+
+   Leave it EMPTY ("") and the site runs in DEMO MODE —
+   all data is stored in the browser's localStorage.
+   ============================================================ */
+
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxlHeOKPguGclnXPbl03j7T_QAMnqc8AUtC8eh9POoW6puvtdeBo3ZqGHVCiboQHni_/exec"; // <-- backend re-deployed 2026-10-09 (photo column wala naya version)
+
+/* Contact truth data (single source for JS widgets) */
+const SITE = {
+  phone: "918789537734",
+  displayPhone: "+91 87895 37734",
+  email: "ajim55539@gmail.com",
+  address: "Bhandaridih, Giridih, Jharkhand",
+  instagram: "https://www.instagram.com/ajim___khan_09/",
+};
+
+</script>
+  <script>
+/* ============================================================
+   assets/sheets.js — Data API layer  [v2]
+   ------------------------------------------------------------
+   Every data operation in the site goes through this file.
+
+   SHEETS MODE  : if WEB_APP_URL is set in config.js, calls the
+                  Google Apps Script Web App (Code.gs router).
+   DEMO MODE    : if WEB_APP_URL is empty, uses a localStorage
+                  backed store with the same function signatures,
+                  so the UI works identically from file:// too.
+
+   Convention: every API function resolves to { ok, data, error }.
+   Actions are matched 1:1 by Code.gs doGet/doPost router.
+   ============================================================ */
+
+/* global WEB_APP_URL */
+
+const ApiMode = { sheets: !!WEB_APP_URL, demo: !WEB_APP_URL };
+const SYNC = { online: false, checkedAt: null }; // filled by ping()
+
+/* ------------------ HTTP helpers (Sheets mode) ------------------ */
+/* We POST with Content-Type: text/plain so Apps Script answers
+   without triggering a CORS preflight (simple request). */
+
+async function apiGet(action, params = {}) {
+  if (ApiMode.demo) return demoGet(action, params);
+  const qs = new URLSearchParams({ action, ...params }).toString();
+  const res = await fetch(`${WEB_APP_URL}?${qs}`, { method: "GET" });
+  return res.json();
+}
+
+async function apiPost(action, payload = {}) {
+  if (ApiMode.demo) return demoPost(action, payload);
+  const res = await fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ action, ...payload }),
+  });
+  return res.json();
+}
+
+/* ============================================================
+   DEFAULT WEBSITE CONTENT (also used as demo seeds)
+   Shared by https://muse.ai/files/1360301033830820/1872163737463658/rnxloox1wzwol1sei58xtuti/index.html (app.js) and admin panel (admin.js).
+   ============================================================ */
+const SITE_DEFAULTS = {
+  hero_line1: "Win That Battle",
+  hero_line2: "In Your Mind",
+  hero_typed: "Build Muscle.,Burn Fat.,Stay Disciplined.,Win The Battle In Your Mind.",
+  whatsapp_msg: "*New Enquiry — Arnold's Gym*\n\nName: {name}\nMobile: {mobile}\nSubject: {subject}\nMessage: {message}",
+  announcement: "New batches start every Monday — first trial session FREE!",
+  gym_name: "Arnold's Gym",
+};
+
+/* ============================================================
+   GYM NAME — single branding source (Settings → Gym Name)
+   ------------------------------------------------------------
+   gymNameOf(content)  → effective gym name from site content
+   applyGymName(name)  → rewrites every "Arnold's Gym" occurrence
+                         in title, text nodes and meta tags.
+   Call it after dynamic content has rendered on each page.
+   ============================================================ */
+const DEFAULT_GYM_NAME = "Arnold's Gym";
+
+const escBr = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function gymNameOf(content) {
+  const n = String((content && content.gym_name) || "").trim();
+  return n || DEFAULT_GYM_NAME;
+}
+
+function applyGymName(name) {
+  name = String(name || "").trim();
+  if (!name || name === DEFAULT_GYM_NAME) return;
+  if (document.title) document.title = document.title.split(DEFAULT_GYM_NAME).join(name);
+  if (document.body) {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => {
+        const p = node.parentElement;
+        if (!p) return NodeFilter.FILTER_REJECT;
+        const tag = p.tagName;
+        if (tag === "SCRIPT" || tag === "STYLE" || tag === "TEXTAREA" || tag === "INPUT") return NodeFilter.FILTER_REJECT;
+        return node.nodeValue.indexOf(DEFAULT_GYM_NAME) !== -1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      },
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach((node) => { node.nodeValue = node.nodeValue.split(DEFAULT_GYM_NAME).join(name); });
+  }
+  document.querySelectorAll('meta[name="description"], meta[property="og:description"]').forEach((m) => {
+    const c = m.getAttribute("content") || "";
+    if (c.indexOf(DEFAULT_GYM_NAME) !== -1) m.setAttribute("content", c.split(DEFAULT_GYM_NAME).join(name));
+  });
+  /* logos split the name across nodes: "Arnold's " + accented "Gym" */
+  document.querySelectorAll(".logo").forEach((logo) => {
+    const norm = logo.textContent.replace(/\s+/g, " ").trim();
+    if (norm !== DEFAULT_GYM_NAME && norm !== name) return;
+    const words = String(name).split(/\s+/).filter(Boolean);
+    const last = words.pop() || name;
+    const first = words.join(" ");
+    const span = logo.querySelector("span");
+    const cls = span && span.getAttribute("class") ? ` class="${span.getAttribute("class")}"` : "";
+    const style = span && span.getAttribute("style") ? ` style="${span.getAttribute("style")}"` : "";
+    logo.innerHTML = `${escBr(first + (first ? " " : ""))}<span${cls}${style}>${escBr(last)}</span>`;
+  });
+}
+
+const DEMO_PLANS = [
+  { id: "plan-seed-1", name: "Monthly", price: "800", duration: "/month", facilities: "Full gym access\nGroup workout batches\nDiet chart guidance", popular: "no", active: "yes" },
+  { id: "plan-seed-2", name: "Quarterly", price: "2000", duration: "/3 months", facilities: "Full gym access\nGroup workout batches\nPersonal diet chart\nMonthly body assessment", popular: "yes", active: "yes" },
+  { id: "plan-seed-3", name: "Yearly", price: "7000", duration: "/year", facilities: "Everything in Quarterly\n2 personal training sessions\nPriority equipment access\nGym T-shirt free", popular: "no", active: "yes" },
+];
+
+const DEMO_TRAINERS = [
+  { id: "tr-seed-1", name: "Md Ajim", role: "Head Trainer · Owner", photo: "assets/trainer-ajim.jpg", bio: "Muscle building, fat loss and strength coaching with daily motivation.", phone: "918789537734", active: "yes" },
+  { id: "tr-seed-2", name: "Ahshan", role: "Fitness Trainer", photo: "assets/trainer-ahshan.jpeg", bio: "Disciplined workouts, nutrition guidance and body transformation coaching.", phone: "918789537734", active: "yes" },
+  { id: "tr-seed-3", name: "Suryansh Pandey", role: "Strength Coach", photo: "", bio: "Powerlifting basics, conditioning and beginner-friendly strength programs.", phone: "918789537734", active: "yes" },
+];
+
+const DEMO_WORKOUTS = [
+  {
+    "slug": "chest",
+    "title": "Chest Exercises",
+    "cover": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Bench Press, Incline Press and Chest Fly — build a wider, thicker chest with serious pushing power.",
+    "details": "Bench Press\nIncline Dumbbell Press\nChest Fly\n45 min · All levels",
+    "steps": "Warm up 5 minutes — arm circles, band pull-aparts and 10 easy push-ups\nFlat barbell bench press — 4 sets x 6–8 reps, rest 90 seconds\nIncline dumbbell press (30°) — 3 sets x 8–10 reps\nDumbbell chest fly — 3 sets x 12 reps, slow and controlled\nPush-ups to near failure — 2 sets to finish the chest\nCool down — doorway chest stretch, 30 seconds per side",
+    "donts": "Don't bounce the bar off your chest — control every rep\nDon't flare elbows to 90° — keep them near 45° to protect shoulders\nDon't lift heavy bench without a spotter\nDon't arch your lower back excessively off the bench",
+    "notes": "Squeeze the chest hard at the top of every rep.\nKeep feet flat on the floor and shoulder blades pinched back.\nAdd weight only when all sets feel clean.",
+    "active": "yes",
+    "id": "wo-seed-chest"
+  },
+  {
+    "slug": "biceps",
+    "title": "Biceps Exercises",
+    "cover": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Dumbbell Curl, Barbell Curl and Hammer Curl — build peaked, stronger biceps.",
+    "details": "Dumbbell Curl\nBarbell Curl\nHammer Curl\n35 min · All levels",
+    "steps": "Warm up — 2 minutes of light arm circles and band curls\nStanding barbell curl — 4 sets x 8–10 reps\nSeated dumbbell curl — 3 sets x 10–12 reps per arm\nHammer curl — 3 sets x 12 reps for forearms and brachialis\nConcentration curl — 2 sets x 12 reps, slow negatives\nStretch biceps — wall stretch 30 seconds per arm",
+    "donts": "Don't swing your torso to lift the weight — no momentum\nDon't let elbows drift forward past your ribs\nDon't use a weight you can't curl for at least 8 clean reps\nDon't train biceps the day before heavy back day",
+    "notes": "Lower the weight slowly — 2–3 seconds down builds more muscle.\nKeep elbows pinned to your sides through every rep.\nFull range of motion beats heavy half-reps.",
+    "active": "yes",
+    "id": "wo-seed-biceps"
+  },
+  {
+    "slug": "triceps",
+    "title": "Triceps Exercises",
+    "cover": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Triceps Pushdown, Skull Crusher and Dips — triceps are two-thirds of your arm size. Build them.",
+    "details": "Triceps Pushdown\nSkull Crusher\nDips\n35 min · All levels",
+    "steps": "Warm up — push-up negatives and light pushdowns, 3 minutes\nRope triceps pushdown — 4 sets x 10–12 reps\nEZ-bar skull crusher — 3 sets x 10 reps, elbows fixed\nBench dips — 3 sets x 12–15 reps\nOverhead dumbbell extension — 2 sets x 12 reps for the long head\nStretch triceps overhead — 30 seconds per arm",
+    "donts": "Don't let elbows flare out on pushdowns — tuck them in\nDon't go too heavy on skull crushers — the name is a warning\nDon't shrug your shoulders up; keep them down and back\nDon't lock out violently — control the top of every rep",
+    "notes": "Pause 1 second at full extension and squeeze.\nTriceps recover fast — 60 seconds rest is enough.\nDips also hit the chest — lean slightly forward for triceps focus.",
+    "active": "yes",
+    "id": "wo-seed-triceps"
+  },
+  {
+    "slug": "legs",
+    "title": "Leg Exercises",
+    "cover": "https://images.unsplash.com/photo-1434608519344-49d77a699e1d?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Squat, Leg Press, Lunges and Leg Extension — build powerful legs. Never skip leg day.",
+    "details": "Squat\nLeg Press\nLunges\nLeg Extension\n50 min · All levels",
+    "steps": "Warm up 5 minutes — brisk walk, leg swings, bodyweight squats\nBarbell back squat — 4 sets x 6–8 reps\nLeg press — 3 sets x 10–12 reps\nWalking lunges — 3 sets x 12 steps per leg\nLeg extension — 3 sets x 15 reps, squeeze at the top\nCool down — quad, hamstring and calf stretches, 5 minutes",
+    "donts": "Don't let knees cave inward — push them out over your toes\nDon't round your lower back in the squat\nDon't lock knees fully on the leg press\nDon't skip warm-up sets before heavy squats",
+    "notes": "Breathe in going down, brace hard and drive up.\nDepth matters — thighs at least parallel before adding weight.\nEat well after leg day — it's the most demanding session.",
+    "active": "yes",
+    "id": "wo-seed-legs"
+  },
+  {
+    "slug": "shoulder",
+    "title": "Shoulder Exercises",
+    "cover": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Shoulder Press, Lateral Raise and Front Raise — 3D delts, better posture, stronger press.",
+    "details": "Shoulder Press\nLateral Raise\nFront Raise\n40 min · All levels",
+    "steps": "Warm up 5 minutes — arm circles + band pull-aparts\nSeated dumbbell overhead press — 4 sets x 10 reps\nLateral raises — 3 sets x 12 reps\nFront raises — 3 sets x 12 reps\nFace pulls — 3 sets x 15 reps\nCool down — shoulder cross-body stretch for 5 minutes",
+    "donts": "Don't shrug your traps up during lateral raises\nDon't go behind the neck on overhead press\nDon't use momentum — lift slow and controlled\nDon't train shoulders the day after heavy chest",
+    "notes": "Rest 60–90 seconds between sets.\nShoulders are small muscles — lighter weights with perfect form win.\nStop immediately if you feel sharp joint pain.",
+    "active": "yes",
+    "id": "wo-seed-shoulder"
+  },
+  {
+    "slug": "back",
+    "title": "Back Exercises",
+    "cover": "https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Lat Pulldown, Pull-up, Seated Row and Deadlift — build a wide, thick, strong back.",
+    "details": "Lat Pulldown\nPull-up\nSeated Row\nDeadlift\n50 min · Intermediate",
+    "steps": "Warm up — band pull-aparts and dead hangs, 5 minutes\nLat pulldown — 4 sets x 10 reps, chest up\nPull-ups (assisted if needed) — 3 sets x max reps\nSeated cable row — 3 sets x 12 reps, squeeze shoulder blades\nRomanian deadlift — 3 sets x 8 reps, hips back\nCool down — child's pose and lat stretch, 5 minutes",
+    "donts": "Don't pull the bar behind your neck on pulldowns\nDon't round your back on deadlifts — ever\nDon't shrug with your traps; pull with your lats\nDon't use momentum — no swinging on rows",
+    "notes": "Think 'elbows to ribs' to feel the lats working.\nDeadlift is king — but form first, weight second.\nA strong back fixes posture and protects your spine.",
+    "active": "yes",
+    "id": "wo-seed-back"
+  },
+  {
+    "slug": "abs",
+    "title": "Abs & Core Exercises",
+    "cover": "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Crunches, Leg Raises, Plank and Russian Twists — build a strong, stable core.",
+    "details": "Crunches\nLeg Raise\nPlank\nRussian Twist\n25 min · All levels",
+    "steps": "Warm up — 2 minutes of marching in place + torso twists\nCrunches — 3 sets x 20 reps, slow and controlled\nLying leg raises — 3 sets x 15 reps, don't let heels touch the floor\nPlank hold — 3 sets x 45–60 seconds\nRussian twists — 3 sets x 20 total reps\nCool down — cobra stretch and child's pose",
+    "donts": "Don't pull your neck on crunches — hands lightly behind ears\nDon't hold your breath — exhale on every crunch\nDon't sag your hips in the plank — squeeze glutes\nDon't train abs with heavy weights daily — they need rest too",
+    "notes": "Quality over quantity — 15 perfect reps beat 50 sloppy ones.\nVisible abs are made in the kitchen — pair this with clean eating.\nTrain core 3–4 times a week, not every day.",
+    "active": "yes",
+    "id": "wo-seed-abs"
+  },
+  {
+    "slug": "cardio",
+    "title": "Cardio Exercises",
+    "cover": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Running, Cycling, Treadmill and Jump Rope — burn fat, boost stamina, strengthen your heart.",
+    "details": "Running\nCycling\nTreadmill\nJump Rope\n30 min · All levels",
+    "steps": "Warm up — 5 minutes easy walk or slow pedalling\nTreadmill run — 10 minutes, conversational pace\nStationary cycling — 8 minutes, moderate resistance\nJump rope intervals — 6 rounds of 45 seconds on / 15 off\nCool down — 5 minutes slow walk + deep breathing\nStretch calves, quads and hamstrings",
+    "donts": "Don't sprint on day one — build base fitness first\nDon't do hard cardio right before heavy lifting\nDon't skip the cool-down — dizziness is common otherwise\nDon't wear flat unsupportive shoes for running",
+    "notes": "You should be able to speak short sentences — that's the right intensity.\n2–3 cardio sessions a week is the sweet spot for fat loss.\nHydrate before, during and after.",
+    "active": "yes",
+    "id": "wo-seed-cardio"
+  },
+  {
+    "slug": "fullbody",
+    "title": "Full Body Exercises",
+    "cover": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Burpees, Mountain Climbers and Kettlebell Swings — maximum calories, minimum time.",
+    "details": "Burpees\nMountain Climbers\nKettlebell Swing\n30 min · Intermediate",
+    "steps": "Warm up — jumping jacks and arm circles, 4 minutes\nBurpees — 4 rounds x 10 reps, rest 60 seconds\nMountain climbers — 3 rounds x 40 seconds\nKettlebell swings — 4 sets x 15 reps, hips explosive\nBodyweight squat to press — 3 sets x 12 reps\nCool down — full-body stretch, 5 minutes",
+    "donts": "Don't round your back on kettlebell swings — hinge at hips\nDon't skip rest between rounds — form breaks down fast\nDon't do full-body HIIT on consecutive days\nDon't hold your breath during burpees",
+    "notes": "Keep a water bottle nearby — this is intense.\nScale down (no-push-up burpees) if you're a beginner.\nGreat for fat loss — pair with a calorie-aware diet.",
+    "active": "yes",
+    "id": "wo-seed-fullbody"
+  },
+  {
+    "slug": "flexibility",
+    "title": "Flexibility & Mobility",
+    "cover": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Stretching, Hip Mobility and Shoulder Mobility — move better, recover faster, avoid injury.",
+    "details": "Full-body Stretching\nHip Mobility\nShoulder Mobility\n20 min · All levels",
+    "steps": "Start with 2 minutes of gentle marching to warm joints\nHip flexor stretch — 60 seconds per side\nDeep squat hold — 60 seconds, heels down\nShoulder dislocates with band/towel — 15 slow reps\nCat-cow + thoracic rotations — 10 reps each\nFinish with 2 minutes of deep breathing in child's pose",
+    "donts": "Don't bounce into stretches — ease in and hold\nDon't stretch cold muscles aggressively\nDon't force a joint past sharp pain — mild pull only\nDon't rush — 10 focused minutes beats 30 distracted ones",
+    "notes": "Do this after workouts or on rest days.\nConsistency beats intensity — daily 10 minutes transforms mobility.\nBreathe deeply into every stretch.",
+    "active": "yes",
+    "id": "wo-seed-flexibility"
+  },
+  {
+    "slug": "functional",
+    "title": "Functional Training",
+    "cover": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Battle Ropes, Sled Push and Farmer Walk — real-world strength that carries into daily life.",
+    "details": "Battle Rope\nSled Push\nFarmer Walk\n35 min · Intermediate",
+    "steps": "Warm up — 5 minutes: jog, arm circles, hip openers\nBattle rope waves — 6 rounds x 30 seconds, rest 30\nSled push — 5 rounds x 20 meters, heavy\nFarmer walk — 4 rounds x 40 meters, heavy dumbbells\nBox step-ups with weight — 3 sets x 10 per leg\nCool down — walk + stretch, 5 minutes",
+    "donts": "Don't round your back on sled pushes or farmer walks\nDon't use ropes too heavy to keep waves going\nDon't look down during farmer walks — eyes forward\nDon't skip grip training — it's the point of farmer walks",
+    "notes": "Functional training builds strength you actually use.\nKeep rest short — this doubles as cardio.\nStart light on the sled; heavy comes with practice.",
+    "active": "yes",
+    "id": "wo-seed-functional"
+  },
+  {
+    "slug": "strength",
+    "title": "Strength & Power Training",
+    "cover": "https://images.unsplash.com/photo-1599058917212-d750089bc07e?q=80&w=1200&auto=format&fit=crop",
+    "intro": "Deadlift, Olympic Squat and Clean & Press — build raw, total-body power.",
+    "details": "Deadlift\nOlympic Squat\nClean & Press\n55 min · Advanced",
+    "steps": "Warm up — 5 min cardio + empty-bar sets of each lift\nDeadlift — 5 sets x 5 reps, heavy, rest 3 minutes\nOlympic back squat — 4 sets x 5 reps, deep\nClean & press — 4 sets x 5 reps, explosive\nAccessory: pull-ups — 3 sets x max reps\nCool down — stretch hips, hamstrings, shoulders",
+    "donts": "Don't max out every session — follow the sets and reps\nDon't deadlift with a rounded back — non-negotiable\nDon't skip warm-up sets on heavy compounds\nDon't train to failure on power lifts — leave 1–2 reps in reserve",
+    "notes": "Rest 2–3 minutes between heavy sets — strength needs recovery.\nAdd a little weight each week — progressive overload is everything.\nSleep 7–8 hours — strength is built during recovery.",
+    "active": "yes",
+    "id": "wo-seed-strength"
+  }
+];
+
+/* ------------------ Public API (same in both modes) ------------------ */
+const api = {
+  /* connection check */
+  ping: () => apiGet("ping"),
+
+  /* members */
+  listMembers: () => apiGet("listMembers"),
+  addMember: (m) => apiPost("addMember", { member: m }),
+  updateMember: (id, m) => apiPost("updateMember", { id, member: m }),
+  deleteMember: (id) => apiPost("deleteMember", { id }),
+  findMember: (mobile) => apiGet("findMember", { mobile }),
+
+  /* staff */
+  listStaff: () => apiGet("listStaff"),
+  addStaff: (s) => apiPost("addStaff", { staff: s }),
+  updateStaff: (id, s) => apiPost("updateStaff", { id, staff: s }),
+  deleteStaff: (id) => apiPost("deleteStaff", { id }),
+
+  /* attendance */
+  listAttendance: (date) => apiGet("listAttendance", { date }),
+  saveAttendance: (date, rows) => apiPost("saveAttendance", { date, rows }),
+
+  /* public forms */
+  register: (r) => apiPost("register", { registration: r }),
+  contact: (c) => apiPost("contact", { message: c }),
+
+  /* ---- v2: generic website-content tabs ---- */
+  readTab: (tab) => apiGet("readTab", { tab }),
+  appendTabRow: (tab, row) => apiPost("appendTabRow", { tab, row }),
+  updateTabRow: (tab, id, patch) => apiPost("updateTabRow", { tab, id, patch }),
+  deleteTabRow: (tab, id) => apiPost("deleteTabRow", { tab, id }),
+
+  /* site content (key/value) with defaults merged in */
+  getSiteContent: async () => {
+    const map = { ...SITE_DEFAULTS };
+    try {
+      const r = await api.readTab("SiteContent");
+      ((r && r.ok && r.data) || []).forEach((x) => {
+        if (x && x.key) map[x.key] = x.value ?? "";
+      });
+    } catch (e) { /* defaults stand */ }
+    return map;
+  },
+  /* insert or update one content key */
+  upsertSiteContent: async (key, value) => {
+    const r = await api.readTab("SiteContent");
+    const rows = (r && r.ok && r.data) || [];
+    const ex = rows.find((x) => x.key === key);
+    if (ex) return api.updateTabRow("SiteContent", ex.id, { value });
+    return api.appendTabRow("SiteContent", { key, value });
+  },
+};
+
+/* ------------------ Sync badge helper ------------------ */
+/* Returns true if the Sheets backend answered. Safe to call
+   anywhere; never throws. */
+async function checkConnection() {
+  try {
+    const r = await api.ping();
+    SYNC.online = !!(r && r.ok && r.data && r.data.service === "gym-api");
+  } catch (e) {
+    SYNC.online = false;
+  }
+  SYNC.checkedAt = new Date();
+  document.dispatchEvent(new CustomEvent("gym:sync", { detail: { ...SYNC } }));
+  return SYNC.online;
+}
+
+/* ============================================================
+   DEMO MODE STORE (localStorage)
+   ============================================================ */
+const LS_KEY = "gym_v2_demo_db_v2";
+
+/* tab name → demo-db collection key */
+const DEMO_TABS = { SiteContent: "siteContent", Plans: "plans", Trainers: "trainers", Workouts: "workouts" };
+
+function demoSeed() {
+  return {
+    members: [
+      { id: "m-seed-1", name: "Ravi Verma", email: "ravi@example.com", mobile: "9876543210", plan: "Monthly", payment: 800, validity: "2026-11-05", created: "2026-10-06T08:00:00" },
+      { id: "m-seed-2", name: "Suresh Yadav", email: "suresh@example.com", mobile: "9876543211", plan: "Quarterly", payment: 2000, validity: "2027-01-06", created: "2026-10-06T08:00:00" },
+      { id: "m-seed-3", name: "Pooja Kumari", email: "pooja@example.com", mobile: "9876543212", plan: "Yearly", payment: 7000, validity: "2026-10-12", created: "2026-10-06T08:00:00" },
+    ],
+    staff: [
+      { id: "s-seed-1", name: "Rahul Sharma", role: "Trainer", salary: 25000 },
+      { id: "s-seed-2", name: "Amit Kumar", role: "Manager", salary: 35000 },
+      { id: "s-seed-3", name: "Rohit Singh", role: "Trainer", salary: 24000 },
+    ],
+    attendance: {}, // { "2026-10-06": [ {name, status}, ... ] }
+    registrations: [],
+    contacts: [],
+    /* --- v2 website content seeds --- */
+    siteContent: Object.entries(SITE_DEFAULTS).map(([key, value], i) => ({ id: "sc-seed-" + i, key, value })),
+    plans: DEMO_PLANS.map((p) => ({ ...p })),
+    trainers: DEMO_TRAINERS.map((t) => ({ ...t })),
+    workouts: DEMO_WORKOUTS.map((w) => ({ ...w })),
+  };
+}
+
+function demoDb() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { /* fall through to seed */ }
+  const seed = demoSeed();
+  localStorage.setItem(LS_KEY, JSON.stringify(seed));
+  return seed;
+}
+
+function demoSave(db) {
+  localStorage.setItem(LS_KEY, JSON.stringify(db));
+}
+
+const uid = () => "id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+
+function demoGet(action, params = {}) {
+  const db = demoDb();
+  switch (action) {
+    case "ping": return Promise.resolve({ ok: true, data: { service: "gym-api-demo", message: "Demo mode (localStorage)" } });
+    case "listMembers": return Promise.resolve({ ok: true, data: db.members });
+    case "findMember": {
+      const digits = String(params.mobile || "").replace(/\D/g, "").slice(-10);
+      const hits = db.members.filter((m) => String(m.mobile || "").replace(/\D/g, "").slice(-10) === digits);
+      hits.sort((a, b) => String(b.validity || "").localeCompare(String(a.validity || "")));
+      const hit = hits[0];
+      if (!hit) return Promise.resolve({ ok: false, error: "Member not found" });
+      const { photo, ...rest } = hit;
+      return Promise.resolve({ ok: true, data: rest });
+    }
+    case "listStaff": return Promise.resolve({ ok: true, data: db.staff });
+    case "listAttendance":
+      return Promise.resolve({ ok: true, data: db.attendance[params.date] || [] });
+    case "readTab": {
+      const col = DEMO_TABS[params.tab];
+      if (!col) return Promise.resolve({ ok: false, error: "Unknown tab: " + params.tab });
+      return Promise.resolve({ ok: true, data: db[col] || [] });
+    }
+    default: return Promise.resolve({ ok: false, error: "Unknown action: " + action });
+  }
+}
+
+function demoPost(action, payload = {}) {
+  const db = demoDb();
+  const tabCol = (tab) => {
+    const col = DEMO_TABS[tab];
+    if (!col) return null;
+    if (!db[col]) db[col] = [];
+    return db[col];
+  };
+  switch (action) {
+    case "addMember": {
+      const member = { id: uid(), created: new Date().toISOString(), ...payload.member };
+      db.members.push(member); demoSave(db);
+      return Promise.resolve({ ok: true, data: member });
+    }
+    case "updateMember": {
+      const i = db.members.findIndex((m) => m.id === payload.id);
+      if (i < 0) return Promise.resolve({ ok: false, error: "Member not found" });
+      db.members[i] = { ...db.members[i], ...payload.member }; demoSave(db);
+      return Promise.resolve({ ok: true, data: db.members[i] });
+    }
+    case "deleteMember": {
+      db.members = db.members.filter((m) => m.id !== payload.id); demoSave(db);
+      return Promise.resolve({ ok: true, data: { id: payload.id } });
+    }
+    case "addStaff": {
+      const staff = { id: uid(), ...payload.staff };
+      db.staff.push(staff); demoSave(db);
+      return Promise.resolve({ ok: true, data: staff });
+    }
+    case "updateStaff": {
+      const i = db.staff.findIndex((s) => s.id === payload.id);
+      if (i < 0) return Promise.resolve({ ok: false, error: "Staff not found" });
+      db.staff[i] = { ...db.staff[i], ...payload.staff }; demoSave(db);
+      return Promise.resolve({ ok: true, data: db.staff[i] });
+    }
+    case "deleteStaff": {
+      db.staff = db.staff.filter((s) => s.id !== payload.id); demoSave(db);
+      return Promise.resolve({ ok: true, data: { id: payload.id } });
+    }
+    case "saveAttendance": {
+      db.attendance[payload.date] = payload.rows; demoSave(db);
+      return Promise.resolve({ ok: true, data: { date: payload.date, count: payload.rows.length } });
+    }
+    case "register": {
+      const r = { id: uid(), created: new Date().toISOString(), ...payload.registration };
+      db.registrations.push(r); demoSave(db);
+      return Promise.resolve({ ok: true, data: r });
+    }
+    case "contact": {
+      const c = { id: uid(), created: new Date().toISOString(), ...payload.message };
+      db.contacts.push(c); demoSave(db);
+      return Promise.resolve({ ok: true, data: c });
+    }
+    /* --- v2 generic tab writers --- */
+    case "appendTabRow": {
+      const col = tabCol(payload.tab);
+      if (!col) return Promise.resolve({ ok: false, error: "Unknown tab: " + payload.tab });
+      const row = { id: uid(), ...(payload.row || {}) };
+      col.push(row); demoSave(db);
+      return Promise.resolve({ ok: true, data: row });
+    }
+    case "updateTabRow": {
+      const col = tabCol(payload.tab);
+      if (!col) return Promise.resolve({ ok: false, error: "Unknown tab: " + payload.tab });
+      const i = col.findIndex((x) => String(x.id) === String(payload.id));
+      if (i < 0) return Promise.resolve({ ok: false, error: "Record not found" });
+      col[i] = { ...col[i], ...(payload.patch || {}) }; demoSave(db);
+      return Promise.resolve({ ok: true, data: col[i] });
+    }
+    case "deleteTabRow": {
+      const col = tabCol(payload.tab);
+      if (!col) return Promise.resolve({ ok: false, error: "Unknown tab: " + payload.tab });
+      db[DEMO_TABS[payload.tab]] = col.filter((x) => String(x.id) !== String(payload.id));
+      demoSave(db);
+      return Promise.resolve({ ok: true, data: { id: payload.id } });
+    }
+    default: return Promise.resolve({ ok: false, error: "Unknown action: " + action });
+  }
+}
+
+</script>
+  <script>
+/* ============================================================
+   assets/admin.js — Arnold's Gym admin dashboard logic
+   All data flows through api.* from assets/sheets.js
+   (Google Sheets Web App, or localStorage demo mode).
+   ============================================================ */
+/* global WEB_APP_URL, SITE, api, checkConnection */
+
+document.addEventListener("DOMContentLoaded", () => {
+  // ---- auth guard (set by login.js) ----
+  if (sessionStorage.getItem("gym_admin") !== "1") {
+    window.location.href = "https://muse.ai/files/1360301033830820/1593015509232827/xe5olhhauofxusc10t8v3qwe/login.html";
+    return;
+  }
+
+  initSidebar();
+  initSyncBadge();
+  initMembers();
+  initStaff();
+  initAttendance();
+  initSiteContent();
+  initPlans();
+  initTrainers();
+  initWorkouts();
+  initSettings();
+  refreshAll();
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    sessionStorage.removeItem("gym_admin");
+    window.location.href = "https://muse.ai/files/1360301033830820/1872163737463658/rnxloox1wzwol1sei58xtuti/index.html";
+  });
+  document.getElementById("viewSiteBtn").addEventListener("click", () => {
+    window.location.href = "https://muse.ai/files/1360301033830820/1872163737463658/rnxloox1wzwol1sei58xtuti/index.html";
+  });
+});
+
+/* ---------------- state ---------------- */
+const state = { members: [], staff: [], attendance: {}, attDate: todayISO(), siteContent: {}, plans: [], trainers: [], workouts: [] };
+function todayISO() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+/* ---------------- sidebar ---------------- */
+function initSidebar() {
+  const links = document.querySelectorAll(".side-link[data-view]");
+  const title = document.getElementById("viewTitle");
+  const names = { overview: "Overview", members: "Members", staff: "Staff", attendance: "Attendance", content: "Website Content", plans: "Membership Plans", trainers: "Trainers", workouts: "Workouts", settings: "Settings" };
+  links.forEach((b) => b.addEventListener("click", () => {
+    links.forEach((x) => x.classList.remove("active"));
+    b.classList.add("active");
+    document.querySelectorAll(".view").forEach((v) => v.classList.remove("active"));
+    document.getElementById("view-" + b.dataset.view).classList.add("active");
+    title.textContent = names[b.dataset.view];
+    document.getElementById("sidebar").classList.remove("open");
+    if (b.dataset.view === "attendance") renderAttendance();
+    if (b.dataset.view === "overview") renderOverview();
+    if (b.dataset.view === "content") fillSiteContentForm();
+  }));
+  document.getElementById("sideToggle").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
+  });
+}
+
+/* ---------------- sync badge ---------------- */
+function initSyncBadge() {
+  const badge = document.getElementById("syncBadge");
+  const text = document.getElementById("syncText");
+  const paint = (online) => {
+    badge.classList.toggle("online", online);
+    badge.classList.toggle("offline", !online);
+    text.textContent = online ? "Google Sheets connected" : "Demo mode (local data)";
+  };
+  document.addEventListener("gym:sync", (e) => paint(e.detail.online));
+  checkConnection().then(paint).catch(() => paint(false));
+}
+
+/* ---------------- data load ---------------- */
+async function refreshAll() {
+  try {
+    const [m, s, sc, pl, tr, wo] = await Promise.all([
+      api.listMembers(), api.listStaff(),
+      api.readTab("SiteContent"), api.readTab("Plans"),
+      api.readTab("Trainers"), api.readTab("Workouts"),
+    ]);
+    state.members = (m && m.ok && m.data) || [];
+    state.staff = (s && s.ok && s.data) || [];
+    state.siteContent = { ...(typeof SITE_DEFAULTS !== "undefined" ? SITE_DEFAULTS : {}) };
+    ((sc && sc.ok && sc.data) || []).forEach((x) => { if (x && x.key) state.siteContent[x.key] = x.value ?? ""; });
+    state.plans = (pl && pl.ok && pl.data) || [];
+    state.trainers = (tr && tr.ok && tr.data) || [];
+    state.workouts = (wo && wo.ok && wo.data) || [];
+  } catch (e) {
+    state.members = []; state.staff = [];
+    state.plans = []; state.trainers = []; state.workouts = [];
+    toast("Could not load data. Check connection.", "error");
+  }
+  renderOverview();
+  renderMembers();
+  renderStaff();
+  renderAttendance();
+  renderPlans();
+  renderTrainers();
+  renderWorkouts();
+  applyGymName(gymNameOf(state.siteContent));
+  const gymInput = document.getElementById("gymNameInput");
+  if (gymInput && document.activeElement !== gymInput) gymInput.value = gymNameOf(state.siteContent);
+}
+
+/* ---------------- helpers ---------------- */
+function parseDate(v) {
+  if (!v) return null;
+  let d;
+  if (v instanceof Date) { d = new Date(v.getTime()); }
+  else {
+    const s = String(v).trim();
+    // Sheets may return full ISO "2026-11-05T18:30:00.000Z" or plain "2026-11-05"
+    d = /^\d{4}-\d{2}-\d{2}$/.test(s) ? new Date(s + "T00:00:00") : new Date(s);
+  }
+  return isNaN(d.getTime()) ? null : d;
+}
+function daysLeft(validity) {
+  const v = parseDate(validity);
+  if (!v) return null;
+  const t = new Date(); t.setHours(0, 0, 0, 0);
+  v.setHours(0, 0, 0, 0);
+  return Math.round((v - t) / 86400000);
+}
+/* pretty date for tables: 05 Nov 2026 */
+function fmtDate(v) {
+  const d = parseDate(v);
+  if (!d) return "—";
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+}
+/* YYYY-MM-DD for <input type="date"> */
+function inputDate(v) {
+  const d = parseDate(v);
+  if (!d) return "";
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+function statusOf(m) {
+  const d = daysLeft(m.validity);
+  if (d === null) return { cls: "expired", label: "No date" };
+  if (d < 0) return { cls: "expired", label: "Expired" };
+  if (d <= 7) return { cls: "expiring", label: "Expiring" };
+  return { cls: "active", label: "Active" };
+}
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const inr = (n) => "₹" + Number(n || 0).toLocaleString("en-IN");
+
+/* ---------------- receipt helpers ---------------- */
+/* joining month se validity month tak, max 12 chips */
+function membershipMonths(startV, endV) {
+  const s = parseDate(startV), e = parseDate(endV);
+  if (!s || !e) return [];
+  const out = [];
+  const d = new Date(s.getFullYear(), s.getMonth(), 1);
+  const last = new Date(e.getFullYear(), e.getMonth(), 1);
+  while (d <= last && out.length < 12) {
+    out.push(d.toLocaleDateString("en-IN", { month: "short", year: "numeric" }));
+    d.setMonth(d.getMonth() + 1);
+  }
+  return out;
+}
+
+/* ---------------- overview ---------------- */
+function renderOverview() {
+  const ms = state.members;
+  const active = ms.filter((m) => statusOf(m).cls === "active").length;
+  // renewal chahiye: 7 din me expire hone wale + pehle se expired (list se match)
+  const expiring = ms.filter((m) => { const d = daysLeft(m.validity); return d !== null && d <= 7; }).length;
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 30);
+  const revenue = ms
+    .filter((m) => m.created && new Date(m.created) >= cutoff)
+    .reduce((sum, m) => sum + Number(m.payment || 0), 0);
+
+  document.getElementById("stTotal").textContent = ms.length;
+  document.getElementById("stActive").textContent = active;
+  document.getElementById("stExpiring").textContent = expiring;
+  document.getElementById("stRevenue").textContent = inr(revenue);
+
+  const box = document.getElementById("expiryAlerts");
+  const soon = ms
+    .map((m) => ({ m, d: daysLeft(m.validity) }))
+    .filter((x) => x.d !== null && x.d <= 7)
+    .sort((a, b) => a.d - b.d);
+
+  if (!soon.length) {
+    box.innerHTML = '<p class="empty"><i class="fas fa-circle-check" style="color:var(--green)"></i> All memberships are healthy. No renewals due.</p>';
+    return;
+  }
+  box.innerHTML = soon.map(({ m, d }) => `
+    <div class="alert-item ${d < 0 ? "red" : ""}">
+      <span><b>${esc(m.name)}</b> <span style="color:var(--muted)">· ${esc(m.mobile || "no mobile")}</span></span>
+      <span class="badge ${d < 0 ? "expired" : "expiring"}">${d < 0 ? "Expired " + Math.abs(d) + "d ago" : d === 0 ? "Expires today" : d + " days left"}</span>
+    </div>`).join("");
+}
+
+/* ---------------- members ---------------- */
+function initMembers() {
+  document.getElementById("memberSearch").addEventListener("input", renderMembers);
+  document.getElementById("addMemberBtn").addEventListener("click", () => openMemberModal());
+  document.getElementById("exportCsvBtn").addEventListener("click", exportMembersCsv);
+  document.getElementById("memberForm").addEventListener("submit", saveMemberForm);
+  document.querySelectorAll("[data-close]").forEach((b) =>
+    b.addEventListener("click", () => b.closest(".modal-backdrop").classList.remove("open")));
+}
+
+/* ---------------- printable membership receipt (fancy gym theme) ---------------- */
+let receiptFileName = "receipt";
+let receiptMember = null;
+
+function receiptMonthChips(startV, endV) {
+  const s = parseDate(startV), e = parseDate(endV);
+  if (!s || !e) return [];
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const curM = new Date(today.getFullYear(), today.getMonth(), 1);
+  const out = [];
+  const d = new Date(s.getFullYear(), s.getMonth(), 1);
+  const last = new Date(e.getFullYear(), e.getMonth(), 1);
+  while (d <= last && out.length < 12) {
+    out.push({
+      name: d.toLocaleDateString("en-IN", { month: "short", year: "numeric" }),
+      paid: d <= curM,
+    });
+    d.setMonth(d.getMonth() + 1);
+  }
+  return out;
+}
+
+function openReceipt(id) {
+  const m = state.members.find((x) => x.id === id);
+  if (!m) return;
+  const gym = gymNameOf(state.siteContent);
+  const rid = "RCP-" + String(m.id).replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase();
+  receiptFileName = rid;
+  receiptMember = m;
+  const today = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  const chips = receiptMonthChips(m.created, m.validity);
+
+  const ic = (e) => `<span style="width:42px;height:42px;flex-shrink:0;border-radius:50%;background:#fff4d6;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem">${e}</span>`;
+  const drow = (e, k, v) => `
+    <div style="display:flex;align-items:center;gap:14px;padding:9px 20px;border-bottom:1px solid #f3ecd9">
+      ${ic(e)}
+      <span style="flex:1;color:#3d3d3d;font-size:.95rem">${k}</span>
+      <b style="font-size:1.02rem;color:#14141c">${v}</b>
+    </div>`;
+
+  document.getElementById("receiptPrint").innerHTML = `
+  <div id="receiptPaper" style="width:560px;margin:0 auto;background:#ffffff;border-radius:18px;overflow:hidden;color:#14141c;font-family:Poppins,sans-serif">
+    <!-- top banner -->
+    <div style="background:linear-gradient(135deg,#0c1425 0%,#16224a 60%,#0c1425 100%);padding:26px 22px 34px;position:relative">
+      <div style="position:absolute;left:-30px;top:-30px;width:130px;height:130px;background:#ffc107;opacity:.14;border-radius:50%"></div>
+      <div style="position:absolute;right:-24px;bottom:-40px;width:150px;height:150px;background:#ffc107;opacity:.10;border-radius:50%"></div>
+      <div style="display:flex;align-items:center;gap:14px;position:relative">
+        <span style="font-size:2.6rem">🏋️</span>
+        <div>
+          <div style="font-family:Oswald,sans-serif;font-size:2.3rem;font-weight:700;font-style:italic;color:#ffc107;letter-spacing:2px;line-height:1">${esc(gym)}</div>
+          <div style="color:#ffffff;letter-spacing:6px;font-size:.78rem;margin-top:4px">FITNESS &amp; GYM</div>
+          <div style="color:#ffc107;font-size:.66rem;letter-spacing:2px;margin-top:5px;font-weight:600">STRONGER &nbsp;•&nbsp; HEALTHIER &nbsp;•&nbsp; HAPPIER</div>
+        </div>
+      </div>
+      <div style="position:absolute;right:20px;top:22px;text-align:right">
+        <div style="color:#ffc107;font-size:1.02rem;font-weight:600">Your Fitness</div>
+        <div style="color:#ffffff;font-size:1.02rem;font-weight:600">Our Priority</div>
+        <div style="height:3px;background:#ffc107;border-radius:2px;margin-top:5px"></div>
+      </div>
+    </div>
+    <!-- ribbon -->
+    <div style="text-align:center;margin-top:-19px;position:relative;z-index:2">
+      <span style="display:inline-block;background:linear-gradient(90deg,#ffb300,#ffd54f,#ffb300);color:#14141c;font-family:Oswald,sans-serif;font-weight:700;font-size:1.15rem;letter-spacing:2px;padding:9px 40px;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.25)">🏋️ MEMBERSHIP RECEIPT 🏋️</span>
+    </div>
+    <!-- receipt no / date -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:18px 22px 6px;gap:10px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.7rem">🧾</span>
+        <div><div style="font-size:.75rem;color:#666">Receipt No:</div><b style="color:#d32f2f;font-size:1.05rem">${esc(rid)}</b></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.7rem">📅</span>
+        <div><div style="font-size:.75rem;color:#666">Date:</div><b style="font-size:1.05rem">${esc(today)}</b></div>
+      </div>
+    </div>
+    <!-- details -->
+    <div style="margin:10px 18px 0;border:1px solid #f3ecd9;border-radius:14px;overflow:hidden;background:#fffdf7">
+      ${drow("👤", "Member Name", esc(m.name))}
+      ${drow("📱", "Mobile", esc(m.mobile || "—"))}
+      ${drow("🗓️", "Plan", esc(m.plan || "—"))}
+      ${drow("💰", "Amount Paid", inr(m.payment))}
+      ${drow("📅", "Starting Date", fmtDate(m.created))}
+      ${drow("⏳", "Expire Date", fmtDate(m.validity))}
+    </div>
+    <!-- month wise -->
+    ${chips.length ? `
+    <div style="padding:16px 22px 0">
+      <span style="display:inline-block;background:#ffc107;color:#14141c;font-weight:800;font-size:.85rem;letter-spacing:1px;padding:7px 20px;border-radius:6px">📅 MONTH-WISE</span>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        ${chips.map((c) => c.paid
+          ? `<span style="background:#22c55e;color:#fff;font-weight:600;font-size:.9rem;padding:9px 22px;border-radius:999px">✅ ${esc(c.name)}</span>`
+          : `<span style="background:#e9e9ef;color:#555;font-weight:600;font-size:.9rem;padding:9px 22px;border-radius:999px">🕐 ${esc(c.name)}</span>`).join("")}
+      </div>
+      <div style="text-align:right;margin-top:10px;color:#e6a200;font-weight:800;font-size:1.05rem;letter-spacing:1px">SMALL STEPS<br><span style="font-size:1.5rem">BIG RESULTS</span> 💪</div>
+    </div>` : ""}
+    <!-- about -->
+    <div style="margin:14px 22px 0;background:#fff8e6;border-radius:14px;padding:16px;display:flex;gap:12px">
+      <span style="font-size:2rem">👨‍💼</span>
+      <div>
+        <b style="font-size:1rem;border-bottom:3px solid #ffc107">About ${esc(gym)}:</b>
+        <p style="font-size:.85rem;color:#444;margin:8px 0 0;line-height:1.55">${esc(SITE.address)} me sthit humara gym strength training, fat loss aur personal coaching ke liye jana jata hai. Certified trainers, modern equipment aur har pocket ke liye plans.</p>
+      </div>
+    </div>
+    <!-- thank you -->
+    <div style="margin:14px 22px 0;background:#14141c;color:#fff;text-align:center;border-radius:12px;padding:13px;font-size:1rem;font-style:italic">Thank you for training with us! 💪</div>
+    <div style="margin:12px 22px 0;background:#14141c;color:#fff;border-radius:999px;padding:11px 18px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:.85rem">
+      <span>📞 Contact: <b>${esc(SITE.displayPhone)}</b></span>
+      <span style="color:#ffc107">|</span>
+      <span>✉️ <b>${esc(SITE.email)}</b></span>
+    </div>
+    <div style="text-align:center;padding:12px 0 16px;color:#b98a00;font-weight:800;letter-spacing:2px;font-size:.75rem">NO PAIN &nbsp;NO GAIN &nbsp;•&nbsp; FITNESS LIFE</div>
+    <div style="height:8px;background:linear-gradient(90deg,#ffb300,#ffd54f,#ffb300)"></div>
+  </div>`;
+  document.getElementById("receiptModal").classList.add("open");
+}
+
+function printReceipt() {
+  window.print();
+}
+
+async function receiptImageBlob() {
+  if (typeof html2canvas === "undefined") {
+    toast("JPG library load nahi hui — internet check karo.", "error");
+    return null;
+  }
+  const canvas = await html2canvas(document.getElementById("receiptPaper"), { scale: 3, useCORS: true, backgroundColor: "#ffffff" });
+  const blob = await new Promise((res) => canvas.toBlob(res, "image/jpeg", 0.95));
+  if (!blob) throw new Error("image nahi bani");
+  return blob;
+}
+
+async function saveReceiptJPG() {
+  try {
+    toast("High-resolution JPG ban rahi hai…");
+    const blob = await receiptImageBlob();
+    if (!blob) return;
+    const a = document.createElement("a");
+    a.download = receiptFileName + ".jpg";
+    a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    toast("JPG save ho gayi: " + receiptFileName + ".jpg");
+  } catch (err) {
+    toast("JPG nahi ban payi: " + err.message, "error");
+  }
+}
+
+// Receipt image seedha WhatsApp par share karo (phone ka share sheet khulega)
+async function shareReceipt() {
+  const m = receiptMember;
+  if (!m) return;
+  let blob = null;
+  try {
+    toast("Receipt image ban rahi hai…");
+    blob = await receiptImageBlob();
+    if (!blob) return;
+    const file = new File([blob], receiptFileName + ".jpg", { type: "image/jpeg" });
+    const gym = gymNameOf(state.siteContent);
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: `${gym} — Payment Receipt`,
+        text: `${m.name} — payment receipt (${receiptFileName})`,
+      });
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return; // user ne share cancel kiya
+  }
+  // fallback: JPG download kar do, WhatsApp par manually bhej dein
+  if (blob) {
+    const a = document.createElement("a");
+    a.download = receiptFileName + ".jpg";
+    a.href = URL.createObjectURL(blob);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  }
+  toast("Share support nahi hai — JPG download kar di, WhatsApp par manually bhej dein.");
+}
+
+function renderMembers() {
+  const q = document.getElementById("memberSearch").value.trim().toLowerCase();
+  const rows = document.getElementById("memberRows");
+  const list = state.members.filter((m) =>
+    !q || (m.name || "").toLowerCase().includes(q) || (m.mobile || "").includes(q));
+
+  if (!list.length) {
+    rows.innerHTML = '<tr><td colspan="8" class="empty">No members found. Click "Add Member" to add one.</td></tr>';
+    return;
+  }
+  rows.innerHTML = list.map((m) => {
+    const d = daysLeft(m.validity);
+    const st = statusOf(m);
+    return `<tr>
+      <td class="cell-main" data-label="Name"><b>${esc(m.name)}</b></td>
+      <td data-label="Mobile">${esc(m.mobile || "—")}</td>
+      <td data-label="Plan">${esc(m.plan || "—")}</td>
+      <td data-label="Payment">${inr(m.payment)}</td>
+      <td data-label="Valid Till">${fmtDate(m.validity)}</td>
+      <td data-label="Days Left"><b>${d === null ? "—" : d < 0 ? "Expired" : d + " days"}</b></td>
+      <td data-label="Status"><span class="badge ${st.cls}">${st.label}</span></td>
+      <td class="cell-act" data-label="Actions"><div class="row-actions">
+        <button class="icon-btn info" title="Generate receipt" onclick="openReceipt('${m.id}')"><i class="fas fa-receipt"></i></button>
+        <button class="icon-btn wa" title="Send receipt on WhatsApp" onclick="receiptWhatsApp('${m.id}')"><i class="fab fa-whatsapp"></i></button>
+        <button class="icon-btn edit" title="Edit" onclick="openMemberModal('${m.id}')"><i class="fas fa-pen"></i></button>
+        <button class="icon-btn del" title="Delete" onclick="deleteMember('${m.id}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+function openMemberModal(id) {
+  const modal = document.getElementById("memberModal");
+  const m = id ? state.members.find((x) => x.id === id) : null;
+  document.getElementById("memberModalTitle").textContent = m ? "Edit Member" : "Add Member";
+  document.getElementById("mId").value = m ? m.id : "";
+  document.getElementById("mName").value = m ? m.name : "";
+  document.getElementById("mMobile").value = (m && m.mobile) || "";
+  document.getElementById("mEmail").value = (m && m.email) || "";
+  document.getElementById("mPlan").value = (m && m.plan) || "Monthly";
+  document.getElementById("mPayment").value = (m && m.payment) || "";
+  document.getElementById("mValidity").value = inputDate(m && m.validity);
+  modal.classList.add("open");
+}
+
+async function saveMemberForm(e) {
+  e.preventDefault();
+  const id = document.getElementById("mId").value;
+  const data = {
+    name: document.getElementById("mName").value.trim(),
+    mobile: document.getElementById("mMobile").value.trim(),
+    email: document.getElementById("mEmail").value.trim(),
+    plan: document.getElementById("mPlan").value,
+    payment: Number(document.getElementById("mPayment").value),
+    validity: document.getElementById("mValidity").value,
+  };
+  await withLoader(async () => {
+    try {
+      const r = id ? await api.updateMember(id, data) : await api.addMember(data);
+      if (r && r.ok) {
+        document.getElementById("memberModal").classList.remove("open");
+        toast(id ? "Member updated." : `Member added: ${data.name}`);
+        await refreshAll();
+      } else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+async function deleteMember(id) {
+  const m = state.members.find((x) => x.id === id);
+  if (!m || !confirm(`Delete member "${m.name}"?`)) return;
+  await withLoader(async () => {
+    try {
+      const r = await api.deleteMember(id);
+      if (r && r.ok) { toast(`Deleted: ${m.name}`); await refreshAll(); }
+      else throw new Error((r && r.error) || "delete failed");
+    } catch (err) { toast("Delete failed: " + err.message, "error"); }
+  });
+}
+
+// Member ka WhatsApp number — Add Member form me dala gaya number, bilkul wahi.
+// Number phone me save ho ya na ho, wa.me link bina save kiye chat khol deta hai.
+function memberWaNumber(mobile) {
+  const d = String(mobile || "").replace(/\D/g, "");
+  if (d.length < 10) return null;                    // invalid number
+  if (d.length === 10) return "91" + d;              // India default
+  if (d.length === 12 && d.startsWith("91")) return d; // 91 pehle se included
+  return d;
+}
+
+function receiptMsg(m) {
+  const d = daysLeft(m.validity);
+  const gym = gymNameOf(state.siteContent);
+  const rid = "RCP-" + String(m.id).replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase();
+  const today = new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  return `*${gym} — Payment Receipt*\nReceipt No: ${rid}\nDate: ${today}\n\nName: ${m.name}\nPlan: ${m.plan || "-"}\nAmount: ${inr(m.payment)}\nValid till: ${fmtDate(m.validity)}\nDays left: ${d === null ? "-" : d < 0 ? "Expired" : d}\n\nThank you for training with us! 💪`;
+}
+
+function receiptWhatsApp(id) {
+  const m = state.members.find((x) => x.id === id);
+  if (!m) return;
+  const wa = memberWaNumber(m.mobile);
+  if (!wa) { toast("Is member ka valid mobile number nahi hai.", "error"); return; }
+  toast(`WhatsApp khul raha hai — ${m.name} (${m.mobile})`);
+  window.open(`https://wa.me/${wa}?text=${encodeURIComponent(receiptMsg(m))}`, "_blank");
+}
+
+function exportMembersCsv() {
+  const head = ["name", "mobile", "email", "plan", "payment", "validity", "status"];
+  const lines = [head.join(",")];
+  state.members.forEach((m) => {
+    lines.push(head.map((h) => `"${String(h === "status" ? statusOf(m).label : (m[h] ?? "")).replace(/"/g, '""')}"`).join(","));
+  });
+  const blob = new Blob([lines.join("\n")], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `arnolds-gym-members-${todayISO()}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast("Members exported as CSV.");
+}
+
+/* ---------------- staff ---------------- */
+function initStaff() {
+  document.getElementById("addStaffBtn").addEventListener("click", () => openStaffModal());
+  document.getElementById("staffForm").addEventListener("submit", saveStaffForm);
+}
+
+function renderStaff() {
+  const rows = document.getElementById("staffRows");
+  if (!state.staff.length) {
+    rows.innerHTML = '<tr><td colspan="4" class="empty">No staff yet. Click "Add Staff".</td></tr>';
+    return;
+  }
+  rows.innerHTML = state.staff.map((s) => `<tr>
+    <td class="cell-main" data-label="Name"><b>${esc(s.name)}</b></td>
+    <td data-label="Role">${esc(s.role)}</td>
+    <td data-label="Salary">${inr(s.salary)}</td>
+    <td class="cell-act" data-label="Actions"><div class="row-actions">
+      <button class="icon-btn edit" onclick="openStaffModal('${s.id}')"><i class="fas fa-pen"></i></button>
+      <button class="icon-btn del" onclick="deleteStaff('${s.id}')"><i class="fas fa-trash"></i></button>
+    </div></td>
+  </tr>`).join("");
+}
+
+function openStaffModal(id) {
+  const modal = document.getElementById("staffModal");
+  const s = id ? state.staff.find((x) => x.id === id) : null;
+  document.getElementById("staffModalTitle").textContent = s ? "Edit Staff" : "Add Staff";
+  document.getElementById("sId").value = s ? s.id : "";
+  document.getElementById("sName").value = s ? s.name : "";
+  document.getElementById("sRole").value = s ? s.role : "";
+  document.getElementById("sSalary").value = s ? s.salary : "";
+  modal.classList.add("open");
+}
+
+async function saveStaffForm(e) {
+  e.preventDefault();
+  const id = document.getElementById("sId").value;
+  const data = {
+    name: document.getElementById("sName").value.trim(),
+    role: document.getElementById("sRole").value.trim(),
+    salary: Number(document.getElementById("sSalary").value),
+  };
+  await withLoader(async () => {
+    try {
+      const r = id ? await api.updateStaff(id, data) : await api.addStaff(data);
+      if (r && r.ok) {
+        document.getElementById("staffModal").classList.remove("open");
+        toast(id ? "Staff updated." : `Staff added: ${data.name}`);
+        await refreshAll();
+      } else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+async function deleteStaff(id) {
+  const s = state.staff.find((x) => x.id === id);
+  if (!s || !confirm(`Delete staff "${s.name}"?`)) return;
+  await withLoader(async () => {
+    try {
+      const r = await api.deleteStaff(id);
+      if (r && r.ok) { toast(`Deleted: ${s.name}`); await refreshAll(); }
+      else throw new Error((r && r.error) || "delete failed");
+    } catch (err) { toast("Delete failed: " + err.message, "error"); }
+  });
+}
+
+/* ---------------- attendance ---------------- */
+function initAttendance() {
+  const dateInput = document.getElementById("attDate");
+  dateInput.value = state.attDate;
+  dateInput.addEventListener("change", () => {
+    state.attDate = dateInput.value || todayISO();
+    loadAttendance();
+  });
+  document.getElementById("saveAttBtn").addEventListener("click", saveAttendance);
+  document.getElementById("attWaBtn").addEventListener("click", sendAttendanceWhatsApp);
+  loadAttendance();
+}
+
+async function loadAttendance() {
+  try {
+    const r = await api.listAttendance(state.attDate);
+    const rows = (r && r.ok && r.data) || [];
+    state.attendance = {};
+    rows.forEach((x) => { state.attendance[x.name] = x.status; });
+  } catch (e) { state.attendance = {}; }
+  renderAttendance();
+}
+
+function renderAttendance() {
+  const rows = document.getElementById("attRows");
+  if (!state.staff.length) {
+    rows.innerHTML = '<tr><td colspan="4" class="empty">Add staff first to mark attendance.</td></tr>';
+    return;
+  }
+  rows.innerHTML = state.staff.map((s, i) => {
+    const st = state.attendance[s.name] || "Present";
+    return `<tr>
+      <td class="cell-no" data-label="No">${i + 1}</td><td class="cell-main" data-label="Name"><b>${esc(s.name)}</b></td><td data-label="Role">${esc(s.role)}</td>
+      <td class="cell-act" data-label="Attendance"><div class="att-toggle">
+        <button class="p ${st === "Present" ? "on" : ""}" onclick="setAtt('${esc(s.name)}','Present')">Present</button>
+        <button class="a ${st === "Absent" ? "on" : ""}" onclick="setAtt('${esc(s.name)}','Absent')">Absent</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+function setAtt(name, status) {
+  state.attendance[name] = status;
+  renderAttendance();
+}
+
+async function saveAttendance() {
+  const rows = state.staff.map((s) => ({ name: s.name, status: state.attendance[s.name] || "Present" }));
+  await withLoader(async () => {
+    try {
+      const r = await api.saveAttendance(state.attDate, rows);
+      if (r && r.ok) toast(`Attendance saved for ${state.attDate} (${rows.length} staff).`);
+      else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+function sendAttendanceWhatsApp() {
+  let msg = `*${gymNameOf(state.siteContent)} — Staff Attendance*\nDate: ${state.attDate}\n\n`;
+  state.staff.forEach((s, i) => {
+    msg += `${i + 1}. ${s.name} — ${state.attendance[s.name] || "Present"}\n`;
+  });
+  window.open(`https://wa.me/${SITE.phone}?text=${encodeURIComponent(msg)}`, "_blank");
+  toast("Opening WhatsApp with attendance summary.");
+}
+
+/* ---------------- website content ---------------- */
+const SC_FIELDS = [
+  ["scHero1", "hero_line1"], ["scHero2", "hero_line2"], ["scTyped", "hero_typed"],
+  ["scAnnounce", "announcement"], ["scWaMsg", "whatsapp_msg"],
+];
+
+function initSiteContent() {
+  document.getElementById("siteContentForm").addEventListener("submit", saveSiteContentForm);
+  fillSiteContentForm();
+}
+
+function fillSiteContentForm() {
+  const d = (typeof SITE_DEFAULTS !== "undefined") ? SITE_DEFAULTS : {};
+  SC_FIELDS.forEach(([elId, key]) => {
+    const el = document.getElementById(elId);
+    if (el) el.value = state.siteContent[key] ?? d[key] ?? "";
+  });
+}
+
+async function saveSiteContentForm(e) {
+  e.preventDefault();
+  await withLoader(async () => {
+    try {
+      for (const [elId, key] of SC_FIELDS) {
+        await api.upsertSiteContent(key, document.getElementById(elId).value);
+      }
+      await refreshAll();
+      toast("Website content saved — live on the site now.");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+/* ---------------- membership plans ---------------- */
+function initPlans() {
+  document.getElementById("addPlanBtn").addEventListener("click", () => openPlanModal());
+  document.getElementById("planForm").addEventListener("submit", savePlanForm);
+}
+
+const ynBadge = (v) => `<span class="badge ${v === "yes" ? "active" : "expired"}">${v === "yes" ? "Yes" : "No"}</span>`;
+
+function renderPlans() {
+  const rows = document.getElementById("planRows");
+  if (!state.plans.length) {
+    rows.innerHTML = '<tr><td colspan="7" class="empty">No plans yet. Click "Add Plan".</td></tr>';
+    return;
+  }
+  rows.innerHTML = state.plans.map((p) => {
+    const fac = String(p.facilities || "").split("\n").filter((x) => x.trim()).length;
+    return `<tr>
+      <td><b>${esc(p.name)}</b></td>
+      <td>${inr(p.price)}</td>
+      <td>${esc(p.duration || "—")}</td>
+      <td>${fac} item${fac === 1 ? "" : "s"}</td>
+      <td>${ynBadge(p.popular)}</td>
+      <td>${ynBadge(p.active)}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn edit" onclick="openPlanModal('${p.id}')"><i class="fas fa-pen"></i></button>
+        <button class="icon-btn del" onclick="deletePlan('${p.id}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+function openPlanModal(id) {
+  const modal = document.getElementById("planModal");
+  const p = id ? state.plans.find((x) => String(x.id) === String(id)) : null;
+  document.getElementById("planModalTitle").textContent = p ? "Edit Plan" : "Add Plan";
+  document.getElementById("pId").value = p ? p.id : "";
+  document.getElementById("pName").value = p ? p.name : "";
+  document.getElementById("pPrice").value = (p && p.price) || "";
+  document.getElementById("pDuration").value = (p && p.duration) || "";
+  document.getElementById("pFacilities").value = (p && p.facilities) || "";
+  document.getElementById("pPopular").checked = p ? p.popular === "yes" : false;
+  document.getElementById("pActive").checked = p ? p.active !== "no" : true;
+  modal.classList.add("open");
+}
+
+async function savePlanForm(e) {
+  e.preventDefault();
+  const id = document.getElementById("pId").value;
+  const data = {
+    name: document.getElementById("pName").value.trim(),
+    price: String(document.getElementById("pPrice").value).trim(),
+    duration: document.getElementById("pDuration").value.trim(),
+    facilities: document.getElementById("pFacilities").value.trim(),
+    popular: document.getElementById("pPopular").checked ? "yes" : "no",
+    active: document.getElementById("pActive").checked ? "yes" : "no",
+  };
+  await withLoader(async () => {
+    try {
+      const r = id ? await api.updateTabRow("Plans", id, data) : await api.appendTabRow("Plans", data);
+      if (r && r.ok) {
+        document.getElementById("planModal").classList.remove("open");
+        toast(id ? "Plan updated." : `Plan added: ${data.name}`);
+        await refreshAll();
+      } else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+async function deletePlan(id) {
+  const p = state.plans.find((x) => String(x.id) === String(id));
+  if (!p || !confirm(`Delete plan "${p.name}"?`)) return;
+  await withLoader(async () => {
+    try {
+      const r = await api.deleteTabRow("Plans", id);
+      if (r && r.ok) { toast(`Deleted plan: ${p.name}`); await refreshAll(); }
+      else throw new Error((r && r.error) || "delete failed");
+    } catch (err) { toast("Delete failed: " + err.message, "error"); }
+  });
+}
+
+/* ---------------- trainers ---------------- */
+function initTrainers() {
+  document.getElementById("addTrainerBtn").addEventListener("click", () => openTrainerModal());
+  document.getElementById("trainerForm").addEventListener("submit", saveTrainerForm);
+  document.getElementById("tPhoto").addEventListener("input", (e) => {
+    const img = document.getElementById("tPhotoPreview");
+    img.style.display = e.target.value.trim() ? "block" : "none";
+    img.src = e.target.value.trim();
+  });
+}
+
+const initialsOf = (name) => String(name || "?").trim().split(/\s+/).slice(0, 2).map((w) => w[0].toUpperCase()).join("");
+
+function renderTrainers() {
+  const rows = document.getElementById("trainerRows");
+  if (!state.trainers.length) {
+    rows.innerHTML = '<tr><td colspan="6" class="empty">No trainers yet. Click "Add Trainer".</td></tr>';
+    return;
+  }
+  rows.innerHTML = state.trainers.map((t) => `
+    <tr>
+      <td>${t.photo
+        ? `<img src="${esc(t.photo)}" alt="" style="width:44px;height:44px;border-radius:50%;object-fit:cover" onerror="this.style.display='none'" />`
+        : `<span class="trainer-avatar" style="width:44px;height:44px;font-size:.9rem;margin:0">${esc(initialsOf(t.name))}</span>`}</td>
+      <td><b>${esc(t.name)}</b></td>
+      <td>${esc(t.role || "—")}</td>
+      <td>${esc(t.phone || "—")}</td>
+      <td>${ynBadge(t.active)}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn edit" onclick="openTrainerModal('${t.id}')"><i class="fas fa-pen"></i></button>
+        <button class="icon-btn del" onclick="deleteTrainer('${t.id}')"><i class="fas fa-trash"></i></button>
+      </div></td>
+    </tr>`).join("");
+}
+
+function openTrainerModal(id) {
+  const modal = document.getElementById("trainerModal");
+  const t = id ? state.trainers.find((x) => String(x.id) === String(id)) : null;
+  document.getElementById("trainerModalTitle").textContent = t ? "Edit Trainer" : "Add Trainer";
+  document.getElementById("tId").value = t ? t.id : "";
+  document.getElementById("tName").value = t ? t.name : "";
+  document.getElementById("tRole").value = (t && t.role) || "";
+  document.getElementById("tPhoto").value = (t && t.photo) || "";
+  document.getElementById("tBio").value = (t && t.bio) || "";
+  document.getElementById("tPhone").value = (t && t.phone) || "";
+  document.getElementById("tActive").checked = t ? t.active !== "no" : true;
+  const img = document.getElementById("tPhotoPreview");
+  img.style.display = (t && t.photo) ? "block" : "none";
+  if (t && t.photo) img.src = t.photo;
+  modal.classList.add("open");
+}
+
+async function saveTrainerForm(e) {
+  e.preventDefault();
+  const id = document.getElementById("tId").value;
+  const data = {
+    name: document.getElementById("tName").value.trim(),
+    role: document.getElementById("tRole").value.trim(),
+    photo: document.getElementById("tPhoto").value.trim(),
+    bio: document.getElementById("tBio").value.trim(),
+    phone: document.getElementById("tPhone").value.replace(/\D/g, ""),
+    active: document.getElementById("tActive").checked ? "yes" : "no",
+  };
+  await withLoader(async () => {
+    try {
+      const r = id ? await api.updateTabRow("Trainers", id, data) : await api.appendTabRow("Trainers", data);
+      if (r && r.ok) {
+        document.getElementById("trainerModal").classList.remove("open");
+        toast(id ? "Trainer updated." : `Trainer added: ${data.name}`);
+        await refreshAll();
+      } else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+async function deleteTrainer(id) {
+  const t = state.trainers.find((x) => String(x.id) === String(id));
+  if (!t || !confirm(`Delete trainer "${t.name}"?`)) return;
+  await withLoader(async () => {
+    try {
+      const r = await api.deleteTabRow("Trainers", id);
+      if (r && r.ok) { toast(`Deleted trainer: ${t.name}`); await refreshAll(); }
+      else throw new Error((r && r.error) || "delete failed");
+    } catch (err) { toast("Delete failed: " + err.message, "error"); }
+  });
+}
+
+/* ---------------- workouts ---------------- */
+function initWorkouts() {
+  document.getElementById("workoutForm").addEventListener("submit", saveWorkoutForm);
+  document.getElementById("wCover").addEventListener("input", (e) => {
+    const img = document.getElementById("wCoverPreview");
+    img.style.display = e.target.value.trim() ? "block" : "none";
+    img.src = e.target.value.trim();
+  });
+}
+
+function renderWorkouts() {
+  const rows = document.getElementById("workoutRows");
+  if (!state.workouts.length) {
+    rows.innerHTML = '<tr><td colspan="5" class="empty">No workouts yet.</td></tr>';
+    return;
+  }
+  rows.innerHTML = state.workouts.map((w) => `
+    <tr>
+      <td>${w.cover
+        ? `<img src="${esc(w.cover)}" alt="" style="width:74px;height:44px;border-radius:8px;object-fit:cover" onerror="this.style.display='none'" />`
+        : '<span style="color:var(--muted)">—</span>'}</td>
+      <td><b>${esc(w.title)}</b></td>
+      <td><span style="font-family:monospace;font-size:.8rem;color:var(--muted)">https://muse.ai/files/1360301033830820/2213724986689128/hp6ako4tav9ovw1gg9zcmq75/workout.html?w=${esc(w.slug)}</span></td>
+      <td>${ynBadge(w.active)}</td>
+      <td><div class="row-actions">
+        <button class="icon-btn edit" onclick="openWorkoutModal('${w.id}')"><i class="fas fa-pen"></i></button>
+      </div></td>
+    </tr>`).join("");
+}
+
+function openWorkoutModal(id) {
+  const modal = document.getElementById("workoutModal");
+  const w = state.workouts.find((x) => String(x.id) === String(id));
+  if (!w) return;
+  document.getElementById("workoutModalTitle").textContent = "Edit: " + w.title;
+  document.getElementById("wId").value = w.id;
+  document.getElementById("wTitle").value = w.title || "";
+  document.getElementById("wSlug").value = w.slug || "";
+  document.getElementById("wCover").value = w.cover || "";
+  document.getElementById("wIntro").value = w.intro || "";
+  document.getElementById("wDetails").value = w.details || "";
+  document.getElementById("wSteps").value = w.steps || "";
+  document.getElementById("wDonts").value = w.donts || "";
+  document.getElementById("wNotes").value = w.notes || "";
+  document.getElementById("wActive").checked = w.active !== "no";
+  const img = document.getElementById("wCoverPreview");
+  img.style.display = w.cover ? "block" : "none";
+  if (w.cover) img.src = w.cover;
+  modal.classList.add("open");
+}
+
+async function saveWorkoutForm(e) {
+  e.preventDefault();
+  const id = document.getElementById("wId").value;
+  const data = {
+    title: document.getElementById("wTitle").value.trim(),
+    slug: document.getElementById("wSlug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g, ""),
+    cover: document.getElementById("wCover").value.trim(),
+    intro: document.getElementById("wIntro").value.trim(),
+    details: document.getElementById("wDetails").value.trim(),
+    steps: document.getElementById("wSteps").value.trim(),
+    donts: document.getElementById("wDonts").value.trim(),
+    notes: document.getElementById("wNotes").value.trim(),
+    active: document.getElementById("wActive").checked ? "yes" : "no",
+  };
+  await withLoader(async () => {
+    try {
+      const r = await api.updateTabRow("Workouts", id, data);
+      if (r && r.ok) {
+        document.getElementById("workoutModal").classList.remove("open");
+        toast(`Workout updated: ${data.title}`);
+        await refreshAll();
+      } else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+/* ---------------- settings ---------------- */
+function initSettings() {
+  const box = document.getElementById("cfgUrl");
+  box.textContent = WEB_APP_URL ? WEB_APP_URL : "(not set — running in Demo Mode)";
+  document.getElementById("gymNameInput").value = gymNameOf(state.siteContent);
+  document.getElementById("saveGymNameBtn").addEventListener("click", saveGymName);
+}
+
+async function saveGymName() {
+  const val = document.getElementById("gymNameInput").value.trim();
+  if (!val) { toast("Gym ka naam khaali nahi ho sakta.", "error"); return; }
+  await withLoader(async () => {
+    try {
+      const r = await api.upsertSiteContent("gym_name", val);
+      if (r && r.ok) {
+        state.siteContent.gym_name = val;
+        applyGymName(val);
+        toast(`Gym ka naam badal gaya: ${val}`);
+      } else throw new Error((r && r.error) || "save failed");
+    } catch (err) { toast("Save failed: " + err.message, "error"); }
+  });
+}
+
+/* ---------------- 5-sec loading popup ---------------- */
+let loaderSeq = 0;
+function showLoader() {
+  const pop = document.getElementById("loaderPop");
+  const fill = document.getElementById("loaderFill");
+  pop.hidden = false;
+  fill.style.transition = "none";
+  fill.style.width = "0%";
+  void fill.offsetWidth; /* reflow taaki animation phir se chale */
+  fill.style.transition = "width 5s linear";
+  fill.style.width = "100%";
+  return ++loaderSeq;
+}
+function hideLoader() {
+  document.getElementById("loaderPop").hidden = true;
+}
+/* fn ko loading popup ke saath chalao — popup kam se kam 5 sec dikhega */
+async function withLoader(fn) {
+  const t0 = Date.now();
+  const my = showLoader();
+  try { return await fn(); }
+  finally {
+    const wait = Math.max(0, 5000 - (Date.now() - t0));
+    setTimeout(() => { if (my === loaderSeq) hideLoader(); }, wait);
+  }
+}
+
+/* ---------------- toast ---------------- */
+function toast(msg, type = "ok") {
+  let t = document.querySelector(".toast");
+  if (!t) { t = document.createElement("div"); t.className = "toast"; document.body.appendChild(t); }
+  t.className = "toast " + type;
+  t.innerHTML = `<i class="fas ${type === "ok" ? "fa-check-circle" : "fa-exclamation-circle"}"></i>${esc(msg)}`;
+  requestAnimationFrame(() => t.classList.add("show"));
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove("show"), 4200);
+}
+
+/* functions called from inline onclick need global scope */
+window.openMemberModal = openMemberModal;
+window.deleteMember = deleteMember;
+window.receiptWhatsApp = receiptWhatsApp;
+window.openReceipt = openReceipt;
+window.printReceipt = printReceipt;
+window.saveReceiptJPG = saveReceiptJPG;
+window.shareReceipt = shareReceipt;
+window.openStaffModal = openStaffModal;
+window.deleteStaff = deleteStaff;
+window.setAtt = setAtt;
+window.openPlanModal = openPlanModal;
+window.deletePlan = deletePlan;
+window.openTrainerModal = openTrainerModal;
+window.deleteTrainer = deleteTrainer;
+window.openWorkoutModal = openWorkoutModal;
+
+</script>
+</body>
+</html>

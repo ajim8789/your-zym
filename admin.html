@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Arnold's Gym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { display: flex; min-height: 100svh; }
+    /* ---- sidebar ---- */
+    .sidebar {
+      width: 250px; flex-shrink: 0; background: var(--bg-2);
+      border-right: 1px solid var(--border); padding: 26px 18px;
+      position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column;
+    }
+    .sidebar .logo { font-size: 1.2rem; margin-bottom: 30px; padding: 0 8px; }
+    .side-link {
+      display: flex; align-items: center; gap: 13px; width: 100%;
+      padding: 13px 14px; border-radius: 12px; border: none; background: none;
+      color: var(--muted); font-family: inherit; font-size: .93rem; font-weight: 500;
+      cursor: pointer; margin-bottom: 6px; text-align: left;
+      transition: background .2s, color .2s;
+    }
+    .side-link i { width: 20px; text-align: center; }
+    .side-link:hover { background: rgba(255,255,255,.05); color: #fff; }
+    .side-link.active { background: var(--grad); color: #fff; box-shadow: 0 8px 20px rgba(255,49,49,.35); }
+    .side-foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--border); }
+    /* ---- main ---- */
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .topbar {
+      position: sticky; top: 0; z-index: 50; padding: 16px 28px;
+      background: rgba(11,11,15,.8); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .topbar h2 { font-size: 1.25rem; text-transform: uppercase; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .sync-badge {
+      display: inline-flex; align-items: center; gap: 9px; font-size: .8rem; font-weight: 600;
+      padding: 8px 16px; border-radius: 999px; border: 1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .sync-badge .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .sync-badge.online .dot { background: var(--green); box-shadow: 0 0 10px var(--green); }
+    .sync-badge.offline .dot { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+    .content { padding: 28px; }
+    .view { display: none; } .view.active { display: block; animation: fadeUp .4s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } }
+    /* ---- stat cards ---- */
+    .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 26px; }
+    .stat-card { display: flex; align-items: center; gap: 16px; padding: 24px; }
+    .stat-card .ic { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 1.3rem; color: #fff; background: var(--grad); flex-shrink: 0; }
+    .stat-card .n { font-family: "Oswald", sans-serif; font-size: 1.9rem; line-height: 1.1; }
+    .stat-card .l { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: 1px; }
+    .panel { margin-bottom: 26px; padding: 26px; }
+    .panel h3 { margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .panel h3 i { color: var(--orange); }
+    /* ---- tables ---- */
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table.data { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 640px; }
+    table.data th { background: rgba(255,255,255,.05); text-align: left; padding: 13px 14px; font-size: .78rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); white-space: nowrap; }
+    table.data td { padding: 13px 14px; border-top: 1px solid var(--border); vertical-align: middle; }
+    table.data tr:hover td { background: rgba(255,255,255,.02); }
+    .badge { display: inline-block; padding: 5px 13px; border-radius: 999px; font-size: .75rem; font-weight: 600; }
+    .badge.active { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.4); }
+    .badge.expiring { background: rgba(245,158,11,.15); color: #fbbf24; border: 1px solid rgba(245,158,11,.4); }
+    .badge.expired { background: rgba(255,49,49,.15); color: #ff8080; border: 1px solid rgba(255,49,49,.4); }
+    .row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .icon-btn { border: none; cursor: pointer; border-radius: 9px; padding: 8px 11px; font-size: .82rem; color: #fff; transition: transform .2s, opacity .2s; }
+    .icon-btn:hover { transform: translateY(-2px); }
+    .icon-btn.edit { background: #b45309; } .icon-btn.del { background: #b91c1c; }
+    .icon-btn.wa { background: #1faa53; } .icon-btn.info { background: #1d4ed8; }
+    .toolbar { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+    .search-box { position: relative; flex: 1; min-width: 200px; max-width: 340px; }
+    .search-box i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .search-box input { padding-left: 40px; }
+    .toolbar .spacer { flex: 1; }
+    .alert-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; border: 1px solid rgba(245,158,11,.35); background: rgba(245,158,11,.07); border-radius: 12px; margin-bottom: 10px; font-size: .9rem; }
+    .alert-item.red { border-color: rgba(255,49,49,.35); background: rgba(255,49,49,.07); }
+    /* attendance toggles */
+    .att-toggle { display: inline-flex; border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+    .att-toggle button { border: none; background: rgba(255,255,255,.04); color: var(--muted); padding: 8px 18px; font-family: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
+    .att-toggle button.p.on { background: var(--green); color: #fff; }
+    .att-toggle button.a.on { background: var(--red); color: #fff; }
+    .code-box { background: #0a0a0e; border: 1px solid var(--border); border-radius: 12px; padding: 16px; font-family: monospace; font-size: .82rem; color: #9be29b; word-break: break-all; margin: 12px 0; }
+    .steps { color: var(--muted); font-size: .9rem; padding-left: 20px; }
+    .steps li { margin-bottom: 10px; }
+    .steps b, .steps strong { color: var(--text); }
+    .mobile-menu-btn { display: none; }
+    .empty { text-align: center; color: var(--muted); padding: 34px 10px; }
+    /* ---- 5-sec loading popup ---- */
+    .loader-pop { position: fixed; inset: 0; z-index: 999; display: grid; place-items: center; background: rgba(0,0,0,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+    .loader-pop[hidden] { display: none; }
+    .loader-card { background: #fff; border-radius: 20px; padding: 30px 34px 34px; width: min(430px, 88vw); box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+    .loader-title { color: #111; font-weight: 800; letter-spacing: 3px; text-align: center; margin-bottom: 18px; font-size: 1.05rem; font-family: "Oswald", sans-serif; }
+    .loader-bar { height: 40px; border-radius: 999px; padding: 4px; border: 4px solid transparent;
+      background: linear-gradient(#fff,#fff) padding-box, linear-gradient(90deg,#ec4899,#f43f5e,#ef4444) border-box; }
+    .loader-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg,#ec4899,#f43f5e,#ef4444); position: relative; }
+    .loader-knob { position: absolute; right: -4px; top: 50%; transform: translate(50%,-50%); width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 5px solid #f43f5e; box-shadow: 0 2px 10px rgba(244,63,94,.55); }
+    /* ---- receipt print ---- */
+    .rcpt-chip { display: inline-block; padding: 5px 12px; border-radius: 999px; font-size: .75rem; font-weight: 600; background: #f1f1f4; color: #333; margin: 0 6px 6px 0; border: 1px solid #ddd; }
+    @media print {
+      body * { visibility: hidden; }
+      #receiptPrint, #receiptPrint * { visibility: visible; }
+      #receiptPrint { position: absolute; left: 0; top: 0; width: 100%; overflow: visible; }
+      .no-print { display: none !important; }
+    }
+    /* receipt ka size fix: phone/tab/laptop/PC sab par 560px, chhoti screen par scroll */
+    #receiptPrint { overflow-x: auto; }
+    @media (max-width: 900px) {
+      .sidebar { position: fixed; left: 0; top: 0; z-index: 200; transform: translateX(-105%); transition: transform .3s ease; }
+      .sidebar.open { transform: none; box-shadow: var(--shadow); }
+      .mobile-menu-btn { display: inline-flex; }
+      .content { padding: 18px; }
+      .topbar { padding: 14px 18px; }
+      .topbar h2 { font-size: 1.05rem; }
+    }
+    @media (max-width: 720px) {
+      .topbar { flex-wrap: wrap; row-gap: 10px; }
+      .sync-badge { font-size: .72rem; padding: 6px 12px; }
+      .toolbar .search-box { max-width: none; flex-basis: 100%; }
+      .toolbar .btn { flex: 1; justify-content: center; }
+      .stat-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .stat-card { padding: 18px 14px; }
+      .stat-card .ic { width: 44px; height: 44px; font-size: 1.05rem; }
+      .stat-card .n { font-size: 1.5rem; }
+      .stat-card .l { font-size: .68rem; }
+      /* mobile: tables become compact cards — sab kuchh ek saath visible, chhota font */
+      .table-wrap { overflow: visible; border: none; }
+      table.data { min-width: 0; font-size: .76rem; }
+      table.data thead { display: none; }
+      table.data tbody { display: grid; gap: 10px; }
+      table.data tr {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 3px 14px;
+        background: var(--card); border: 1px solid var(--border);
+        border-radius: 14px; padding: 12px 14px;
+      }
+      table.data tr:hover td { background: none; }
+      table.data td {
+        border: none; padding: 3px 0; min-width: 0;
+        display: flex; align-items: center; gap: 7px;
+      }
+      table.data td::before {
+        content: attr(data-label);
+        font-size: .58rem; font-weight: 600; text-transform: uppercase; letter-spacing: .6px;
+        color: var(--muted); flex-shrink: 0; min-width: 56px;
+      }
+      table.data td.cell-main {
+        grid-column: 1 / -1; font-size: .95rem;
+        padding-bottom: 7px; margin-bottom: 4px;
+        border-bottom: 1px dashed var(--border);
+      }
+      table.data td.cell-main::before { display: none; }
+      table.data td.cell-act { grid-column: 1 / -1; padding-top: 8px; }
+      table.data td.cell-act::before { display: none; }
+      table.data td.cell-no { display: none; }
+      table.data td.empty { grid-column: 1 / -1; justify-content: center; text-align: center; }
+      table.data td.empty::before { display: none; }
+      .row-actions { gap: 6px; }
+      .icon-btn { padding: 7px 10px; font-size: .74rem; }
+      .badge { font-size: .62rem; padding: 3px 9px; }
+      .panel { padding: 20px 16px; }
+      .modal { padding: 24px 18px; }
+      .form-actions .btn { flex: 1; justify-content: center; }
+      .alert-item { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 400px) {
+      .content { padding: 14px 12px; }
+      .topbar h2 { font-size: .95rem; }
+      .stat-cards { gap: 10px; }
+      .stat-card { flex-direction: column; text-align: center; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="logo">Arnold's <span class="accent" style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">Gym</span></a>
+    <nav>
+      <button class="side-link active" data-view="overview"><i class="fas fa-gauge-high"></i> Overview</button>
+      <button class="side-link" data-view="members"><i class="fas fa-users"></i> Members</button>
+      <button class="side-link" data-view="staff"><i class="fas fa-user-tie"></i> Staff</button>
+      <button class="side-link" data-view="attendance"><i class="fas fa-clipboard-check"></i> Attendance</button>
+      <button class="side-link" data-view="content"><i class="fas fa-pen-to-square"></i> Website Content</button>
+      <button class="side-link" data-view="plans"><i class="fas fa-tags"></i> Membership Plans</button>
+      <button class="side-link" data-view="trainers"><i class="fas fa-dumbbell"></i> Trainers</button>
+      <button class="side-link" data-view="workouts"><i class="fas fa-list-check"></i> Workouts</button>
+      <button class="side-link" data-view="settings"><i class="fas fa-gear"></i> Settings</button>
+    </nav>
+    <div class="side-foot">
+      <button class="side-link" id="viewSiteBtn"><i class="fas fa-globe"></i> View Website</button>
+      <button class="side-link" id="logoutBtn" style="color:#ff8080"><i class="fas fa-right-from-bracket"></i> Logout</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-ghost btn-sm mobile-menu-btn" id="sideToggle"><i class="fas fa-bars"></i></button>
+        <h2 id="viewTitle">Overview</h2>
+      </div>
+      <div class="topbar-right">
+        <span class="sync-badge offline" id="syncBadge"><span class="dot"></span><span id="syncText">Checking…</span></span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ===== OVERVIEW ===== -->
+      <div class="view active" id="view-overview">
+        <div class="stat-cards">
+          <div class="card stat-card"><div class="ic"><i class="fas fa-users"></i></div><div><div class="n" id="stTotal">0</div><div class="l">Total Members</div></div></div>
+          <div class="card stat-card"><div class="ic" style="background:linear-gradient(135deg,#22c55e,#16a34a)"><i class="fas fa-circle-check"></i></div><div><div class="n" id="stActive">0</div><div class="l">Active</div></div></div>
+          <div class="card stat-card"><div class="ic" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-triangle-exclamation"></i></div><div><div class="n" id="stExpiring">0</div><div class="l">Needs renewal</div></div></div>
+          <div class="card stat-card"><div class="ic" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9)"><i class="fas fa-indian-rupee-sign"></i></div><div><div class="n" id="stRevenue">₹0</div><div class="l">Revenue (30 days)</div></div></div>
+        </div>
+        <div class="card panel">
+          <h3><i class="fas fa-bell"></i> Expiring Soon — Renewal Reminders</h3>
+          <div id="expiryAlerts"><p class="empty">Loading…</p></div>
+        </div>
+      </div>
+
+      <!-- ===== MEMBERS ===== -->
+      <div class="view" id="view-members">
+        <div class="toolbar">
+          <div class="search-box"><i class="fas fa-search"></i><input type="text" id="memberSearch" placeholder="Search name / mobile…" /></div>
+          <div class="spacer"></div>
+          <button class="btn btn-ghost btn-sm" id="exportCsvBtn"><i class="fas fa-file-csv"></i> Export CSV</button>
+          <button class="btn btn-grad btn-sm" id="addMemberBtn"><i class="fas fa-plus"></i> Add Member</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr>
+                <th>Name</th><th>Mobile</th><th>Plan</th><th>Payment</th><th>Valid Till</th><th>Days Left</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="memberRows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== STAFF ===== -->
+      <div class="view" id="view-staff">
+        <div class="toolbar">
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="addStaffBtn"><i class="fas fa-plus"></i> Add Staff</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Name</th><th>Role</th><th>Salary</th><th>Actions</th></tr></thead>
+              <tbody id="staffRows"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ATTENDANCE ===== -->
+      <div class="view" id="view-attendance">
+        <div class="toolbar">
+          <div class="field" style="min-width:200px"><label for="attDate">Date</label><input type="date" id="attDate" /></div>
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="saveAttBtn"><i class="fas fa-floppy-disk"></i> Save Attendance</button>
+          <button class="btn btn-whatsapp btn-sm" id="attWaBtn"><i class="fab fa-whatsapp"></i> Send on WhatsApp</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>#</th><th>Name</th><th>Role</th><th>Status</th></tr></thead>
+              <tbody id="attRows"><tr><td colspan="4" class="empty">Loading staff…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== WEBSITE CONTENT ===== -->
+      <div class="view" id="view-content">
+        <div class="card panel">
+          <h3><i class="fas fa-pen-to-square"></i> Home Page Content</h3>
+          <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">These texts appear on the website home page. Changes go live immediately.</p>
+          <form id="siteContentForm">
+            <div class="form-grid">
+              <div class="field"><label>Hero Line 1</label><input id="scHero1" type="text" placeholder="Win That Battle" /></div>
+              <div class="field"><label>Hero Line 2</label><input id="scHero2" type="text" placeholder="In Your Mind" /></div>
+              <div class="field full"><label>Hero rotating words (comma separated)</label><input id="scTyped" type="text" placeholder="Build Muscle., Burn Fat., Stay Disciplined." /></div>
+              <div class="field full"><label>Announcement bar text</label><input id="scAnnounce" type="text" placeholder="New batches start every Monday…" /></div>
+              <div class="field full"><label>WhatsApp message template <span style="color:var(--muted);font-weight:400">(use {name}, {mobile}, {subject}, {message})</span></label><textarea id="scWaMsg" rows="5"></textarea></div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-floppy-disk"></i> Save Website Content</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- ===== MEMBERSHIP PLANS ===== -->
+      <div class="view" id="view-plans">
+        <div class="toolbar">
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="addPlanBtn"><i class="fas fa-plus"></i> Add Plan</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Plan</th><th>Price</th><th>Duration</th><th>Facilities</th><th>Popular</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody id="planRows"><tr><td colspan="7" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TRAINERS ===== -->
+      <div class="view" id="view-trainers">
+        <div class="toolbar">
+          <div class="spacer"></div>
+          <button class="btn btn-grad btn-sm" id="addTrainerBtn"><i class="fas fa-plus"></i> Add Trainer</button>
+        </div>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Photo</th><th>Name</th><th>Position</th><th>Phone</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody id="trainerRows"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== WORKOUTS ===== -->
+      <div class="view" id="view-workouts">
+        <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">Each workout gets its own detail page on the website (<span style="font-family:monospace">workout.html?w=slug</span>).</p>
+        <div class="card panel" style="padding:0;overflow:hidden">
+          <div class="table-wrap" style="border:none">
+            <table class="data">
+              <thead><tr><th>Cover</th><th>Title</th><th>Page Link</th><th>Active</th><th>Actions</th></tr></thead>
+              <tbody id="workoutRows"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SETTINGS ===== -->
+      <div class="view" id="view-settings">
+        <div class="card panel">
+          <h3><i class="fas fa-signature"></i> Gym Name</h3>
+          <p style="color:var(--muted);font-size:.88rem;margin-bottom:18px">Ye naam poori website, admin panel aur WhatsApp messages me <b style="color:var(--text)">har jagah</b> badal jayega.</p>
+          <div class="form-grid">
+            <div class="field full"><label>Gym ka naam</label><input id="gymNameInput" type="text" placeholder="Arnold's Gym" maxlength="60" /></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-grad btn-sm" id="saveGymNameBtn"><i class="fas fa-floppy-disk"></i> Save Gym Name</button>
+          </div>
+        </div>
+        <div class="card panel">
+          <h3><i class="fas fa-cloud"></i> Google Sheets Backend</h3>
+          <p style="color:var(--muted);font-size:.9rem;margin-bottom:6px">Configured Web App URL:</p>
+          <div class="code-box" id="cfgUrl">(not set — running in Demo Mode)</div>
+          <p style="color:var(--muted);font-size:.9rem">
+            To connect live Google Sheets: open <b>SETUP-GUIDE.md</b> in the project folder and follow the
+            5 steps (create Sheet → paste Code.gs → Deploy as Web App → paste URL into
+            <b>assets/config.js</b> → refresh this page). The badge in the top bar will turn green.
+          </p>
+        </div>
+        <div class="card panel">
+          <h3><i class="fas fa-table"></i> Expected Sheet Tabs</h3>
+          <div class="table-wrap">
+            <table class="data">
+              <thead><tr><th>Tab</th><th>Columns (auto-created)</th></tr></thead>
+              <tbody>
+                <tr><td><b>Members</b></td><td>id, name, payment, validity, email, mobile, plan, created, photo</td></tr>
+                <tr><td><b>Staff</b></td><td>id, name, role, salary</td></tr>
+                <tr><td><b>Attendance</b></td><td>id, date, name, status</td></tr>
+                <tr><td><b>Registrations</b></td><td>id, name, email, mobile, gender, plan, password, created</td></tr>
+                <tr><td><b>Contacts</b></td><td>id, name, mobile, subject, message, created</td></tr>
+                <tr><td><b>SiteContent</b></td><td>id, key, value</td></tr>
+                <tr><td><b>Plans</b></td><td>id, name, price, duration, facilities, popular, active</td></tr>
+                <tr><td><b>Trainers</b></td><td>id, name, role, photo, bio, phone, active</td></tr>
+                <tr><td><b>Workouts</b></td><td>id, slug, title, cover, intro, details, steps, donts, notes, active</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============ LOADING POPUP (5 sec, har save/delete par) ============ -->
+  <div class="loader-pop" id="loaderPop" hidden>
+    <div class="loader-card">
+      <div class="loader-title">LOADING.....</div>
+      <div class="loader-bar"><div class="loader-fill" id="loaderFill"><span class="loader-knob"></span></div></div>
+    </div>
+  </div>
+
+  <!-- ============ RECEIPT MODAL ============ -->
+  <div class="modal-backdrop" id="receiptModal">
+    <div class="modal" style="width:min(640px,100%);max-width:640px">
+      <div id="receiptPrint"></div>
+      <div class="form-actions no-print" style="margin-top:18px">
+        <button type="button" class="btn btn-grad btn-sm" onclick="printReceipt()"><i class="fas fa-print"></i> Print</button>
+        <button type="button" class="btn btn-ghost btn-sm" onclick="saveReceiptJPG()"><i class="fas fa-image"></i> Save JPG</button>
+        <button type="button" class="btn btn-whatsapp btn-sm" onclick="shareReceipt()"><i class="fab fa-whatsapp"></i> Share</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MEMBER MODAL ============ -->
+  <div class="modal-backdrop" id="memberModal">
+    <div class="modal">
+      <h3 id="memberModalTitle">Add Member</h3>
+      <form id="memberForm">
+        <input type="hidden" id="mId" />
+        <div class="form-grid">
+          <div class="field full"><label>Full Name</label><input id="mName" type="text" required /></div>
+          <div class="field"><label>Mobile / WhatsApp No.</label><input id="mMobile" type="tel" placeholder="10-digit mobile number" /></div>
+          <div class="field"><label>Email</label><input id="mEmail" type="email" /></div>
+          <div class="field"><label>Plan</label>
+            <select id="mPlan"><option>Monthly</option><option>Quarterly</option><option>Yearly</option></select>
+          </div>
+          <div class="field"><label>Payment (₹)</label><input id="mPayment" type="number" min="0" required /></div>
+          <div class="field full"><label>Valid Until</label><input id="mValidity" type="date" required /></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ STAFF MODAL ============ -->
+  <div class="modal-backdrop" id="staffModal">
+    <div class="modal">
+      <h3 id="staffModalTitle">Add Staff</h3>
+      <form id="staffForm">
+        <input type="hidden" id="sId" />
+        <div class="form-grid">
+          <div class="field full"><label>Name</label><input id="sName" type="text" required /></div>
+          <div class="field"><label>Role</label><input id="sRole" type="text" placeholder="Trainer / Manager" required /></div>
+          <div class="field"><label>Salary (₹)</label><input id="sSalary" type="number" min="0" required /></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ PLAN MODAL ============ -->
+  <div class="modal-backdrop" id="planModal">
+    <div class="modal">
+      <h3 id="planModalTitle">Add Plan</h3>
+      <form id="planForm">
+        <input type="hidden" id="pId" />
+        <div class="form-grid">
+          <div class="field"><label>Plan Name</label><input id="pName" type="text" placeholder="Monthly" required /></div>
+          <div class="field"><label>Price (₹)</label><input id="pPrice" type="number" min="0" placeholder="800" required /></div>
+          <div class="field full"><label>Duration label</label><input id="pDuration" type="text" placeholder="/month" /></div>
+          <div class="field full"><label>Facilities <span style="color:var(--muted);font-weight:400">(one per line)</span></label><textarea id="pFacilities" rows="4" placeholder="Full gym access&#10;Diet chart guidance"></textarea></div>
+          <div class="field check"><label><input id="pPopular" type="checkbox" /> Mark as Popular</label></div>
+          <div class="field check"><label><input id="pActive" type="checkbox" checked /> Show on website</label></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ TRAINER MODAL ============ -->
+  <div class="modal-backdrop" id="trainerModal">
+    <div class="modal">
+      <h3 id="trainerModalTitle">Add Trainer</h3>
+      <form id="trainerForm">
+        <input type="hidden" id="tId" />
+        <div class="form-grid">
+          <div class="field"><label>Name</label><input id="tName" type="text" placeholder="Md Ajim" required /></div>
+          <div class="field"><label>Position / Role</label><input id="tRole" type="text" placeholder="Head Trainer" required /></div>
+          <div class="field full"><label>Photo URL <span style="color:var(--muted);font-weight:400">(leave empty for initials avatar)</span></label><input id="tPhoto" type="url" placeholder="https://…" /></div>
+          <div class="field full" style="text-align:center"><img id="tPhotoPreview" alt="" style="max-height:120px;border-radius:12px;display:none" /></div>
+          <div class="field"><label>Phone (WhatsApp)</label><input id="tPhone" type="tel" placeholder="918789537734" /></div>
+          <div class="field check"><label><input id="tActive" type="checkbox" checked /> Show on website</label></div>
+          <div class="field full"><label>Bio</label><textarea id="tBio" rows="3" placeholder="Short intro about the trainer…"></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ WORKOUT MODAL ============ -->
+  <div class="modal-backdrop" id="workoutModal">
+    <div class="modal" style="max-width:640px">
+      <h3 id="workoutModalTitle">Edit Workout</h3>
+      <form id="workoutForm">
+        <input type="hidden" id="wId" />
+        <div class="form-grid">
+          <div class="field"><label>Title</label><input id="wTitle" type="text" required /></div>
+          <div class="field"><label>Page slug</label><input id="wSlug" type="text" placeholder="arms" required /></div>
+          <div class="field full"><label>Cover image URL</label><input id="wCover" type="url" placeholder="https://…" /></div>
+          <div class="field full" style="text-align:center"><img id="wCoverPreview" alt="" style="max-height:140px;border-radius:12px;display:none" /></div>
+          <div class="field full"><label>Short intro</label><textarea id="wIntro" rows="2"></textarea></div>
+          <div class="field full"><label>Details chips <span style="color:var(--muted);font-weight:400">(e.g. 4 exercises · 45 min · All levels)</span></label><input id="wDetails" type="text" /></div>
+          <div class="field full"><label>Steps <span style="color:var(--muted);font-weight:400">(one per line, in order)</span></label><textarea id="wSteps" rows="5"></textarea></div>
+          <div class="field full"><label>What NOT to do <span style="color:var(--muted);font-weight:400">(one per line)</span></label><textarea id="wDonts" rows="4"></textarea></div>
+          <div class="field full"><label>Important notes <span style="color:var(--muted);font-weight:400">(one per line)</span></label><textarea id="wNotes" rows="4"></textarea></div>
+          <div class="field check"><label><input id="wActive" type="checkbox" checked /> Show on website</label></div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-grad btn-sm"><i class="fas fa-check"></i> Save</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close><i class="fas fa-times"></i> Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/sheets.js"></script>
+  <script src="assets/admin.js"></script>
+</body>
+</html>

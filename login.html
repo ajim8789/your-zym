@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Arnold's Gym</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    body { min-height: 100svh; display: grid; place-items: center; padding: 24px;
+      background:
+        radial-gradient(600px 340px at 85% 10%, rgba(255,122,0,.14), transparent 60%),
+        radial-gradient(700px 420px at 10% 90%, rgba(255,49,49,.16), transparent 60%),
+        var(--bg); }
+    .login-card {
+      width: min(420px, 100%);
+      background: var(--card); border: 1px solid var(--border); border-radius: 22px;
+      padding: 44px 36px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow); text-align: center;
+      animation: pop .5s ease;
+    }
+    @keyframes pop { from { opacity: 0; transform: translateY(24px) scale(.98); } }
+    .login-icon {
+      width: 74px; height: 74px; border-radius: 22px; margin: 0 auto 18px;
+      display: grid; place-items: center; font-size: 1.8rem; color: #fff;
+      background: var(--grad); box-shadow: 0 10px 26px rgba(255,49,49,.45);
+    }
+    .login-card h2 { text-transform: uppercase; margin-bottom: 6px; }
+    .login-card .sub { color: var(--muted); font-size: .88rem; margin-bottom: 26px; }
+    .login-card .field { text-align: left; margin-bottom: 16px; }
+    .pw-wrap { position: relative; }
+    .pw-wrap button {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem;
+    }
+    .login-err {
+      display: none; background: rgba(255,49,49,.1); border: 1px solid rgba(255,49,49,.4);
+      color: #ff8080; font-size: .85rem; border-radius: 10px; padding: 10px 14px; margin-bottom: 16px;
+    }
+    .login-err.show { display: block; }
+    .back-link { display: inline-block; margin-top: 20px; color: var(--muted); font-size: .88rem; }
+    .back-link:hover { color: var(--orange); }
+    @media (max-width: 480px) {
+      body { padding: 16px; }
+      .login-card { padding: 32px 22px; }
+      .login-icon { width: 62px; height: 62px; font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="login-icon"><i class="fas fa-user-shield"></i></div>
+    <h2>Admin <span class="accent" style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">Login</span></h2>
+    <p class="sub">Arnold's Gym management dashboard</p>
+
+    <div class="login-err" id="loginErr"><i class="fas fa-exclamation-circle"></i> Invalid email or password.</div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="admin email" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="password" placeholder="password" required autocomplete="current-password" />
+          <button type="button" id="pwToggle" aria-label="Show password"><i class="fas fa-eye"></i></button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-grad" style="width:100%;justify-content:center;margin-top:8px">
+        <i class="fas fa-right-to-bracket"></i> Log In
+      </button>
+    </form>
+
+    <a class="back-link" href="index.html"><i class="fas fa-arrow-left"></i> Back to home</a>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/sheets.js"></script>
+  <script src="assets/login.js"></script>
+  <script>
+    // gym name branding (Settings → Gym Name in admin panel)
+    document.addEventListener("DOMContentLoaded", () => {
+      api.getSiteContent().then((c) => { if (c) applyGymName(gymNameOf(c)); }).catch(() => {});
+    });
+  </script>
+</body>
+</html>

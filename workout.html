@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workout — Arnold's Gym</title>
+  <meta name="description" content="Step-by-step workout guide at Arnold's Gym, Giridih." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    .wo-hero { position: relative; min-height: 46svh; display: flex; align-items: flex-end; background-size: cover; background-position: center; }
+    .wo-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,11,15,.25), rgba(11,11,15,.92)); }
+    .wo-hero .container { position: relative; z-index: 1; padding-bottom: 38px; }
+    .wo-hero h1 { font-size: clamp(2rem, 6vw, 3.4rem); text-transform: uppercase; }
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 6px; }
+    .chip { display: inline-flex; align-items: center; gap: 8px; font-size: .82rem; font-weight: 600; padding: 8px 16px; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--text); }
+    .chip i { color: var(--orange); }
+    .wo-body { padding: 34px 0 60px; }
+    .wo-sec { margin-bottom: 30px; }
+    .wo-sec h2 { font-size: 1.3rem; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .wo-sec h2 i { color: var(--orange); }
+    .steps-list { list-style: none; counter-reset: step; padding: 0; }
+    .steps-list li { counter-increment: step; display: flex; gap: 16px; padding: 15px 18px; margin-bottom: 12px; }
+    .steps-list li::before { content: counter(step); flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px; background: var(--grad); display: grid; place-items: center; font-family: "Oswald", sans-serif; font-weight: 700; font-size: 1.05rem; }
+    .donts-list { list-style: none; padding: 0; }
+    .donts-list li { display: flex; gap: 12px; align-items: flex-start; padding: 13px 18px; margin-bottom: 10px; border: 1px solid rgba(255,49,49,.3); background: rgba(255,49,49,.06); border-radius: 12px; }
+    .donts-list i { color: #ff8080; margin-top: 3px; }
+    .notes-box { border: 1px solid rgba(245,158,11,.4); background: rgba(245,158,11,.08); border-radius: 14px; padding: 20px 22px; }
+    .notes-box ul { padding-left: 20px; color: var(--text); }
+    .notes-box li { margin-bottom: 8px; }
+    .wo-cta { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: .9rem; margin: 22px 0 0; }
+    .back-link:hover { color: #fff; }
+    @media (max-width: 720px) {
+      .wo-hero { min-height: 38svh; }
+      .wo-hero .container { padding-bottom: 26px; }
+      .steps-list li { gap: 12px; padding: 13px 14px; }
+      .steps-list li::before { width: 32px; height: 32px; font-size: .95rem; }
+      .wo-sec h2 { font-size: 1.1rem; }
+      .wo-cta .btn { flex: 1; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-inner">
+      <a href="index.html" class="logo">Arnold's <span class="accent">Gym</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#home">Home</a></li>
+        <li><a href="index.html#programs">Programs</a></li>
+        <li><a href="index.html#pricing">Pricing</a></li>
+        <li><a href="index.html#trainers">Trainers</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li><a href="Registration.html" class="btn btn-grad btn-sm nav-cta"><i class="fas fa-dumbbell"></i> Join Now</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <div id="woWrap">
+    <div class="container" style="padding:120px 0 60px;text-align:center">
+      <p class="empty"><i class="fas fa-spinner fa-spin"></i> Loading workout…</p>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">
+        <span>© 2026 Arnold's Gym. All rights reserved.</span>
+        <span><a href="index.html" style="color:var(--muted)">Back to home</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/sheets.js"></script>
+  <script src="assets/workout.js"></script>
+</body>
+</html>
